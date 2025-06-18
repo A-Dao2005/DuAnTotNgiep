@@ -4,7 +4,7 @@ import LoginScreen from '@/components/LoginScreen';
 import ProfileScreen from '@/components/ProfileScreen';
 import RegisterScreen from '@/components/RegisterScreen';
 import RegisterSuccessScreen from '@/components/RegisterSuccessScreen';
-
+import SearchScreen from '@/components/SearchScreen';
 import FeedbackScreen from '@/components/FeedbackScreen';
 import NotificationScreen from '@/components/NotificationScreen';
 
@@ -61,6 +61,9 @@ export default function HomeScreen() {
   if (screen === 'productDetail') {
     // Thêm component ProductDetailScreen nếu cần
     return <div>Product Detail Screen - Product: {JSON.stringify(selectedProduct)}</div>;
+  }
+   if (screen === 'search') {
+    return <SearchScreen onBack={() => setScreen('homeMain')} onProductPress={(product) => { setSelectedProduct(product); setScreen('productDetail'); }} />;
   }
 
   return null;
