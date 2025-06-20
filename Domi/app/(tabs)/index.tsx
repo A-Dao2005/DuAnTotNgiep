@@ -11,6 +11,7 @@ import SupportChatScreen from '@/components/SupportChatScreen';
 import SupportTopicScreen from '@/components/SupportTopicScreen';
 import OrderSuccessScreen from '@/components/OrderSuccessScreen';
 import { useState } from 'react';
+import { View, Text } from 'react-native';
 
 export default function HomeScreen() {
   const [screen, setScreen] = useState<'login' | 'register' | 'registerSuccess' | 'homeMain' | 'profile' | 'changePassword' | 'feedback' | 'supportTopic' | 'supportChat' | 'search' | 'notification' | 'orderSuccess' | 'productDetail'>('login');
@@ -61,7 +62,11 @@ export default function HomeScreen() {
  
   if (screen === 'productDetail') {
     // Thêm component ProductDetailScreen nếu cần
-    return <div>Product Detail Screen - Product: {JSON.stringify(selectedProduct)}</div>;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Product Detail Screen - Product: {JSON.stringify(selectedProduct)}</Text>
+      </View>
+    );
   }
    if (screen === 'search') {
     return <SearchScreen onBack={() => setScreen('homeMain')} onProductPress={(product) => { setSelectedProduct(product); setScreen('productDetail'); }} />;
