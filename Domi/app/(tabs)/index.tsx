@@ -7,8 +7,9 @@ import RegisterSuccessScreen from '@/components/RegisterSuccessScreen';
 import SearchScreen from '@/components/SearchScreen';
 import FeedbackScreen from '@/components/FeedbackScreen';
 import NotificationScreen from '@/components/NotificationScreen';
-
-
+import SupportChatScreen from '@/components/SupportChatScreen';
+import SupportTopicScreen from '@/components/SupportTopicScreen';
+import OrderSuccessScreen from '@/components/OrderSuccessScreen';
 import { useState } from 'react';
 
 export default function HomeScreen() {
@@ -64,6 +65,15 @@ export default function HomeScreen() {
   }
    if (screen === 'search') {
     return <SearchScreen onBack={() => setScreen('homeMain')} onProductPress={(product) => { setSelectedProduct(product); setScreen('productDetail'); }} />;
+  }
+    if (screen === 'supportTopic') {
+    return <SupportTopicScreen onBack={() => setScreen('profile')} onSelectTopic={(topic) => { setSelectedSupportTopic(topic); setScreen('supportChat'); }} />;
+  }
+  if (screen === 'supportChat') {
+    return <SupportChatScreen onBack={() => setScreen('supportTopic')} topic={selectedSupportTopic} />;
+  }
+   if (screen === 'orderSuccess') {
+    return <OrderSuccessScreen onGoHome={() => { setCart([]); setScreen('homeMain'); }} />;
   }
 
   return null;
