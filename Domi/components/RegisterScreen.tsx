@@ -13,7 +13,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [rePassword, setRePassword] = useState('');
 
   return (
-    <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80' }} style={styles.background}>
+    <ImageBackground source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.background}>
       <View style={styles.container}>
         <Text style={styles.title}>ĐĂNG KÝ</Text>
         <Text style={styles.subtitle}>Vui lòng điền đầy đủ thông tin để tạo tài khoản mới!</Text>

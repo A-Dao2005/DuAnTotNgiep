@@ -26,7 +26,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     phone: '09876543210',
     email: 'hello@gmail.com',
     address: '81 Hoàng Hoa Thám',
-    avatar: 'https://i.pravatar.cc/100',
+    avatar: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
   },
   onLogout,
   onEditProfile,
@@ -44,7 +44,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </TouchableOpacity>
       <View style={styles.profileBox}>
         <View style={styles.profileCenter}>
-          <Image source={{ uri: user.avatar || 'https://i.pravatar.cc/100' }} style={styles.avatar} />
+          <Image source={{ uri: user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.avatar} />
           <Text style={styles.helloCenter}>{user.name}</Text>
           <TouchableOpacity onPress={onEditProfile}>
             <Text style={styles.editText}>Chỉnh sửa thông tin cá nhân</Text>

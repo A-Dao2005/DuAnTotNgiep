@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
 const allProducts = [
-  { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg' },
-  { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg' },
-  { name: 'Bộ dao kéo Nhật', price: '320,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-2.jpg' },
-  { name: 'Dao thái đa năng', price: '120,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/dao-thai-da-nang.jpg' },
-  { name: 'Chảo chống dính', price: '250,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/chao-chong-dinh.jpg' },
-  { name: 'Bộ nồi chảo bếp', price: '500,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-noi-chao-bep.jpg' },
+  { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+  { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+  { name: 'Bộ dao kéo Nhật', price: '320,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+  { name: 'Dao thái đa năng', price: '120,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+  { name: 'Chảo chống dính', price: '250,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+  { name: 'Bộ nồi chảo bếp', price: '500,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
 ];
 
 interface SearchScreenProps {

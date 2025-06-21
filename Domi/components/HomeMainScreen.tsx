@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Product } from './ProductDetailScreen';
+import Swiper from 'react-native-swiper';
 
 const userName = 'Nguyen Van A';
 
@@ -13,16 +14,16 @@ const categories = [
 
 const productsByCategory = {
   hot: [
-    { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg' },
-    { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg' },
+    { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+    { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
   ],
   knife: [
-    { name: 'Bộ dao kéo Nhật', price: '320,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-2.jpg' },
-    { name: 'Dao thái đa năng', price: '120,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/dao-thai-da-nang.jpg' },
+    { name: 'Bộ dao kéo Nhật', price: '320,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+    { name: 'Dao thái đa năng', price: '120,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
   ],
   pan: [
-    { name: 'Chảo chống dính', price: '250,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/chao-chong-dinh.jpg' },
-    { name: 'Bộ nồi chảo bếp', price: '500,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-noi-chao-bep.jpg' },
+    { name: 'Chảo chống dính', price: '250,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
+    { name: 'Bộ nồi chảo bếp', price: '500,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' },
   ],
 };
 
@@ -49,31 +50,37 @@ const HomeMainScreen: React.FC<HomeMainScreenProps> = ({ onProductPress, onCartP
           <Text style={styles.userName}>{userName}</Text>
         </View>
         <TouchableOpacity onPress={onProfilePress}>
-          <Image source={{ uri: 'https://i.pravatar.cc/100' }} style={styles.avatar} />
+          <Image source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.avatar} />
         </TouchableOpacity>
       </View>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {/* Banner */}
-        <Image source={{ uri: 'https://salt.tikicdn.com/ts/tmp/3e/2d/2e/7e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e.jpg' }} style={styles.banner} />
+        {/* Banner Carousel */}
+        <View style={{ width: '110%', height: 160, alignSelf: 'center', marginBottom: 10 }}>
+          <Swiper autoplay={true} showsPagination={true} height={160} dotColor="#fff" activeDotColor="#E53935">
+            <Image source={{ uri: 'https://cdn.s99.vn/ss1/prod/product/95b1b140ca950aad3360029548ed3f66.jpg' }} style={styles.banner} resizeMode="cover" />
+            <Image source={{ uri: 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482593bjo/anh-mo-ta.png' }} style={styles.banner} resizeMode="cover" />
+            <Image source={{ uri: 'https://giadungviet888.rf.gd/wp-content/uploads/2024/03/mau-banner-quang-cao-dien-may_033707028-1400x575.jpg' }} style={styles.banner} resizeMode="cover" />
+          </Swiper>
+        </View>
         {/* Sản phẩm nổi bật */}
         <View style={styles.sectionRow}>
           <Text style={styles.sectionTitle}>Mọi người đều thích!</Text>
           <TouchableOpacity onPress={() => onSeeMore && onSeeMore([
-            { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg', description: 'Bộ dao kéo cao cấp, chất liệu bền đẹp, an toàn cho sức khỏe.', rating: 5 },
-            { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg', description: 'Bộ dụng cụ 5 món tiện lợi cho căn bếp của bạn.', rating: 4 }
+            { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg', description: 'Bộ dao kéo cao cấp, chất liệu bền đẹp, an toàn cho sức khỏe.', rating: 5 },
+            { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg', description: 'Bộ dụng cụ 5 món tiện lợi cho căn bếp của bạn.', rating: 4 }
           ])}><Text style={styles.seeMore}>Xem thêm {'>'}</Text></TouchableOpacity>
         </View>
         <View style={styles.productsRow}>
-          <TouchableOpacity onPress={() => onProductPress && onProductPress({ name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg', description: 'Bộ dao kéo cao cấp, chất liệu bền đẹp, an toàn cho sức khỏe.', rating: 5 })}>
+          <TouchableOpacity onPress={() => onProductPress && onProductPress({ name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg', description: 'Bộ dao kéo cao cấp, chất liệu bền đẹp, an toàn cho sức khỏe.', rating: 5 })}>
             <View style={styles.productCard}>
-              <Image source={{ uri: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg' }} style={styles.productImg} />
+              <Image source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.productImg} />
               <Text style={styles.productName}>bộ dao kéo cao cấp</Text>
               <Text style={styles.productPrice}>225,000 VND</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onProductPress && onProductPress({ name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg', description: 'Bộ dụng cụ 5 món tiện lợi cho căn bếp của bạn.', rating: 4 })}>
+          <TouchableOpacity onPress={() => onProductPress && onProductPress({ name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg', description: 'Bộ dụng cụ 5 món tiện lợi cho căn bếp của bạn.', rating: 4 })}>
             <View style={styles.productCard}>
-              <Image source={{ uri: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg' }} style={styles.productImg} />
+              <Image source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.productImg} />
               <Text style={styles.productName}>bộ dụng cụ 5món</Text>
               <Text style={styles.productPrice}>180,000 VND</Text>
             </View>
@@ -112,7 +119,7 @@ const HomeMainScreen: React.FC<HomeMainScreenProps> = ({ onProductPress, onCartP
           {productsByCategory[selectedCategory].map((prod, idx) => (
             <TouchableOpacity key={idx} onPress={() => onProductPress && onProductPress({ ...prod, description: 'Giá úp chén đĩa được làm từ nhựa nguyên sinh an toàn cho sức khỏe, thân thiện với môi trường. Không ám mùi khó chịu khi sử dụng.', rating: 4 })}>
               <View style={styles.productCard}>
-                <Image source={{ uri: prod.img }} style={styles.productImg} />
+                <Image source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.productImg} />
                 <Text style={styles.productName}>{prod.name}</Text>
                 <Text style={styles.productPrice}>{prod.price}</Text>
               </View>
@@ -193,8 +200,8 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
   },
   banner: {
-    width: '100%',
-    height: 100,
+    width: '110%',
+    height: 160,
     borderRadius: 8,
     marginBottom: 10,
   },

@@ -42,7 +42,7 @@ const SupportChatScreen: React.FC<SupportChatScreenProps> = ({ onBack, topic }) 
               {msg.text.includes('mgfvn.com') ? (
                 <>
                   {msg.text.split('mgfvn.com')[0]}
-                  <Text style={{ color: '#1976D2' }} onPress={() => Linking.openURL('https://mgfvn.com')}>mgfvn.com</Text>
+                  <Text style={{ color: '#1976D2' }} onPress={() => Linking.openURL('https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg')}>mgfvn.com</Text>
                 </>
               ) : (
                 msg.text

@@ -37,7 +37,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({ onBack, onS
         <Text style={{ fontSize: 22 }}>{'←'}</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>
-        <Image source={{ uri: 'https://i.pravatar.cc/100' }} style={styles.avatar} />
+        <Image source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.avatar} />
         <View>
           <Text style={styles.hello}>Xin chào, <Text style={{ color: '#E53935' }}>Nguyen Van A</Text></Text>
           <Text style={styles.editText}>Chỉnh sửa thông tin cá nhân</Text>

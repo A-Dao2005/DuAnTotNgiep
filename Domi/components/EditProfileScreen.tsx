@@ -19,7 +19,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user = { name: ''
   const [phone, setPhone] = useState(user.phone);
   const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user.address);
-  const [avatar, setAvatar] = useState(user.avatar || 'https://i.pravatar.cc/100');
+  const [avatar, setAvatar] = useState(user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg');
   const [success, setSuccess] = useState(false);
 
   const pickImage = async () => {
