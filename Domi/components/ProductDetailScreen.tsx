@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { productsByCategory } from './HomeMainScreen';
 
 export interface Product {
   name: string;
@@ -16,10 +17,12 @@ interface ProductDetailScreenProps {
   onAddToCart: (product: Product) => void;
   onCheckout: (product: Product) => void;
   onBack?: () => void;
+  onProductPress?: (product: Product) => void;
 }
 
-const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ product, onAddToCart, onCheckout, onBack }) => {
+const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ product, onAddToCart, onCheckout, onBack, onProductPress }) => {
   const [showAdded, setShowAdded] = useState(false);
+  const otherProducts = Object.values(productsByCategory).flat().filter((p: any) => p.name !== product.name);
   const handleAddToCart = () => {
     onAddToCart(product);
     setShowAdded(true);
@@ -44,6 +47,19 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ product, onAd
         <View style={styles.descBox}>
           <Text style={styles.descTitle}>Chi tiết sản phẩm</Text>
           <Text style={styles.productDesc}>{product.description}</Text>
+        </View>
+        <View style={styles.divider} />
+        <View style={styles.otherBox}>
+          <Text style={styles.otherTitle}>Sản phẩm khác</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.otherRow}>
+            {otherProducts.map((prod: any, idx: number) => (
+              <TouchableOpacity key={idx} style={styles.otherCard} onPress={() => onProductPress && onProductPress(prod)}>
+                <Image source={{ uri: prod.img }} style={styles.otherImg} />
+                <Text style={styles.otherName}>{prod.name}</Text>
+                <Text style={styles.otherPrice}>{prod.price}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       </ScrollView>
       <View style={styles.bottomBar}>
@@ -87,4 +103,11 @@ const styles = StyleSheet.create({
   checkoutBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, textAlign: 'center' },
   toast: { position: 'absolute', bottom: 80, left: 40, right: 40, backgroundColor: '#4CAF50', padding: 16, borderRadius: 8, alignItems: 'center', zIndex: 100 },
   toastText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  otherBox: { backgroundColor: '#fff', padding: 12, marginTop: 0 },
+  otherTitle: { fontWeight: 'bold', fontSize: 16, marginBottom: 8, color: '#222' },
+  otherRow: { flexDirection: 'row', gap: 10 },
+  otherCard: { backgroundColor: '#fff', borderRadius: 10, padding: 8, alignItems: 'center', width: 110, elevation: 2, marginRight: 10 },
+  otherImg: { width: 70, height: 70, borderRadius: 8, marginBottom: 5 },
+  otherName: { fontWeight: 'bold', fontSize: 13, color: '#222', textAlign: 'center' },
+  otherPrice: { color: '#E53935', fontSize: 13, marginTop: 2, textAlign: 'center' },
 }); 

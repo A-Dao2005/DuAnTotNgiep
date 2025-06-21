@@ -8,6 +8,7 @@ interface ProfileScreenProps {
     phone: string;
     email: string;
     address: string;
+    avatar?: string;
   };
   onLogout?: () => void;
   onEditProfile?: () => void;
@@ -25,6 +26,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     phone: '09876543210',
     email: 'hello@gmail.com',
     address: '81 Hoàng Hoa Thám',
+    avatar: 'https://i.pravatar.cc/100',
   },
   onLogout,
   onEditProfile,
@@ -40,21 +42,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
       <TouchableOpacity onPress={onBack} style={styles.backBtn}>
         <Text style={{ fontSize: 22 }}>{'←'}</Text>
       </TouchableOpacity>
-      <View style={styles.header}>
-        <View style={styles.searchBox}>
-          <Text style={styles.searchIcon}>🔍</Text>
-          <Text style={styles.searchText}>Tìm kiếm...</Text>
-        </View>
-      </View>
       <View style={styles.profileBox}>
-        <View style={styles.profileRow}>
-          <Image source={{ uri: 'https://i.pravatar.cc/100' }} style={styles.avatar} />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.hello}>Xin chào, <Text style={{ color: '#E53935' }}>{user.name}</Text></Text>
-            <TouchableOpacity onPress={onEditProfile}>
-              <Text style={styles.editText}>Chỉnh sửa thông tin cá nhân</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.profileCenter}>
+          <Image source={{ uri: user.avatar || 'https://i.pravatar.cc/100' }} style={styles.avatar} />
+          <Text style={styles.helloCenter}>{user.name}</Text>
+          <TouchableOpacity onPress={onEditProfile}>
+            <Text style={styles.editText}>Chỉnh sửa thông tin cá nhân</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.infoBox}>
           <Text style={styles.infoText}>Tên người dùng: <Text style={styles.infoValue}>{user.name}</Text></Text>
@@ -111,16 +105,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8DC', padding: 12 },
-  backBtn: { position: 'absolute', top: 16, left: 12, zIndex: 10, backgroundColor: '#fff', borderRadius: 20, padding: 4 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
-  searchBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: '#eee' },
-  searchIcon: { fontSize: 16, marginRight: 6 },
-  searchText: { color: '#888', fontSize: 14 },
+  container: { flex: 1, backgroundColor: '#FFF8DC', padding: 12, marginTop: 20 },
+  backBtn: { position: 'absolute', top: 32, left: 12, zIndex: 10, backgroundColor: '#fff', borderRadius: 20, padding: 10 },
   profileBox: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 14 },
-  profileRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  avatar: { width: 60, height: 60, borderRadius: 30, marginRight: 12, borderWidth: 1, borderColor: '#eee' },
-  hello: { fontWeight: 'bold', fontSize: 15, color: '#222' },
+  profileCenter: { alignItems: 'center', marginBottom: 10, justifyContent: 'center' },
+  avatar: { width: 60, height: 60, borderRadius: 30, marginRight: 0, marginBottom: 4, borderWidth: 1, borderColor: '#eee' },
+  helloCenter: { fontWeight: 'bold', fontSize: 15, color: '#222', textAlign: 'center', marginTop: 2 },
   editText: { color: '#388e3c', fontSize: 13, marginTop: 2 },
   infoBox: { marginBottom: 10 },
   infoText: { color: '#222', fontSize: 14, marginBottom: 2 },

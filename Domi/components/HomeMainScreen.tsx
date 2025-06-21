@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { Product } from './ProductDetailScreen';
 
 const userName = 'Nguyen Van A';
 
@@ -26,15 +27,16 @@ const productsByCategory = {
 };
 
 type HomeMainScreenProps = {
-  onProductPress?: (product: { name: string; price: string; img: string; description: string; rating?: number }) => void;
+  onProductPress?: (product: Product) => void;
   onCartPress?: () => void;
   cart?: { product: any; quantity: number }[];
   onProfilePress?: () => void;
   onSearch?: () => void;
   onNotification?: () => void;
+  onSeeMore?: (products: Product[]) => void;
 };
 
-const HomeMainScreen: React.FC<HomeMainScreenProps> = ({ onProductPress, onCartPress, cart = [], onProfilePress, onSearch, onNotification }) => {
+const HomeMainScreen: React.FC<HomeMainScreenProps> = ({ onProductPress, onCartPress, cart = [], onProfilePress, onSearch, onNotification, onSeeMore }) => {
   const [selectedCategory, setSelectedCategory] = useState<'hot' | 'knife' | 'pan'>('hot');
 
   return (
@@ -56,7 +58,10 @@ const HomeMainScreen: React.FC<HomeMainScreenProps> = ({ onProductPress, onCartP
         {/* Sản phẩm nổi bật */}
         <View style={styles.sectionRow}>
           <Text style={styles.sectionTitle}>Mọi người đều thích!</Text>
-          <TouchableOpacity><Text style={styles.seeMore}>Xem thêm {'>'}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => onSeeMore && onSeeMore([
+            { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg', description: 'Bộ dao kéo cao cấp, chất liệu bền đẹp, an toàn cho sức khỏe.', rating: 5 },
+            { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg', description: 'Bộ dụng cụ 5 món tiện lợi cho căn bếp của bạn.', rating: 4 }
+          ])}><Text style={styles.seeMore}>Xem thêm {'>'}</Text></TouchableOpacity>
         </View>
         <View style={styles.productsRow}>
           <TouchableOpacity onPress={() => onProductPress && onProductPress({ name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg', description: 'Bộ dao kéo cao cấp, chất liệu bền đẹp, an toàn cho sức khỏe.', rating: 5 })}>
@@ -146,6 +151,7 @@ const HomeMainScreen: React.FC<HomeMainScreenProps> = ({ onProductPress, onCartP
   );
 };
 
+export { productsByCategory };
 export default HomeMainScreen;
 
 const styles = StyleSheet.create({

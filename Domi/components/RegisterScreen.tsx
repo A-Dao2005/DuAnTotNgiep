@@ -1,54 +1,138 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 
-interface RegisterScreenProps {
-  onRegister?: (username: string, password: string, email: string) => void;
-  onLogin?: () => void;
-}
+type RegisterScreenProps = {
+  navigation?: {
+    navigate: (screen: string) => void;
+  };
+};
 
-const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onLogin }) => {
-  const [username, setUsername] = useState('');
+const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [rePassword, setRePassword] = useState('');
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Đăng ký</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Tên đăng nhập"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mật khẩu"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.registerBtn} onPress={() => onRegister && onRegister(username, password, email)}>
-        <Text style={styles.registerBtnText}>Đăng ký</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onLogin}>
-        <Text style={styles.loginText}>Đã có tài khoản? Đăng nhập</Text>
-      </TouchableOpacity>
-    </View>
+    <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80' }} style={styles.background}>
+      <View style={styles.container}>
+        <Text style={styles.title}>ĐĂNG KÝ</Text>
+        <Text style={styles.subtitle}>Vui lòng điền đầy đủ thông tin để tạo tài khoản mới!</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Họ và tên</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Nguyen Van A"
+            placeholderTextColor="#888"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Mật khẩu</Text>
+          <TextInput
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            placeholder="0123456789"
+            placeholderTextColor="#888"
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Nhập lại Mật khẩu</Text>
+          <TextInput
+            style={styles.input}
+            value={rePassword}
+            onChangeText={setRePassword}
+            placeholder="******"
+            placeholderTextColor="#888"
+            secureTextEntry
+          />
+        </View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate && navigation.navigate('RegisterSuccess')}>
+          <Text style={styles.buttonText}>ĐĂNG KÝ</Text>
+        </TouchableOpacity>
+        <View style={styles.bottomTextContainer}>
+          <Text style={styles.bottomText}>Bạn có tài khoản rồi? </Text>
+          <TouchableOpacity onPress={() => navigation?.navigate && navigation.navigate('Login')}>
+            <Text style={styles.linkText}>ĐĂNG NHẬP</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8DC', justifyContent: 'center', alignItems: 'center', padding: 16 },
-  title: { fontWeight: 'bold', fontSize: 22, color: '#B71C1C', marginBottom: 24 },
-  input: { width: '100%', backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 15, paddingVertical: 10, fontSize: 15, borderWidth: 1, borderColor: '#eee', marginBottom: 12 },
-  registerBtn: { backgroundColor: '#388e3c', borderRadius: 20, paddingVertical: 12, paddingHorizontal: 40, marginBottom: 12 },
-  registerBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  loginText: { color: '#1976D2', fontSize: 14 },
-});
+export default RegisterScreen;
 
-export default RegisterScreen; 
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 8,
+    marginTop: 40,
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#fff',
+    fontSize: 15,
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 15,
+  },
+  label: {
+    color: '#fff',
+    marginBottom: 5,
+    marginLeft: 10,
+  },
+  input: {
+    backgroundColor: '#FFF8DC',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  button: {
+    backgroundColor: '#1976D2',
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  bottomTextContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  bottomText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  linkText: {
+    color: '#FFD700',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+}); 

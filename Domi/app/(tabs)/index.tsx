@@ -17,14 +17,24 @@ import SupportTopicScreen from '@/components/SupportTopicScreen';
 import SupportChatScreen from '@/components/SupportChatScreen';
 import SearchScreen from '@/components/SearchScreen';
 import NotificationScreen from '@/components/NotificationScreen';
+import ProductListScreen from '@/components/ProductListScreen';
+import EditProfileScreen from '@/components/EditProfileScreen';
 
 export default function HomeScreen() {
-  const [screen, setScreen] = useState<'welcome' | 'login' | 'register' | 'registerSuccess' | 'homeMain' | 'category' | 'productDetail' | 'cart' | 'orderInfo' | 'orderPayment' | 'orderSuccess' | 'profile' | 'changePassword' | 'feedback' | 'supportTopic' | 'supportChat' | 'search' | 'notification'>('welcome');
+  const [user, setUser] = useState({
+    name: 'Nguyen Van A',
+    id: '123456789',
+    phone: '09876543210',
+    email: 'hello@gmail.com',
+    address: '81 Hoàng Hoa Thám',
+  });
+  const [screen, setScreen] = useState<'welcome' | 'login' | 'register' | 'registerSuccess' | 'homeMain' | 'category' | 'productDetail' | 'productList' | 'cart' | 'orderInfo' | 'orderPayment' | 'orderSuccess' | 'profile' | 'changePassword' | 'feedback' | 'supportTopic' | 'supportChat' | 'search' | 'notification' | 'editProfile'>('welcome');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [orderTotal, setOrderTotal] = useState(0);
   const [shippingFee] = useState(30000);
   const [selectedSupportTopic, setSelectedSupportTopic] = useState<string | null>(null);
+  const [productList, setProductList] = useState<Product[]>([]);
 
   const addToCart = (product: Product, quantity: number = 1) => {
     setCart((prev) => {
@@ -67,16 +77,33 @@ export default function HomeScreen() {
     return <RegisterSuccessScreen navigation={{ navigate: (s) => setScreen(s === 'Login' ? 'login' : 'welcome') }} />;
   }
   if (screen === 'homeMain') {
-    return <HomeMainScreen onProductPress={(product: Product) => { setSelectedProduct(product); setScreen('productDetail'); }} onCartPress={() => setScreen('cart')} cart={cart} onProfilePress={() => setScreen('profile')} onSearch={() => setScreen('search')} onNotification={() => setScreen('notification')} />;
+    return <HomeMainScreen 
+      onProductPress={(product: Product) => { setSelectedProduct(product); setScreen('productDetail'); }}
+      onCartPress={() => setScreen('cart')}
+      cart={cart}
+      onProfilePress={() => setScreen('profile')}
+      onSearch={() => setScreen('search')}
+      onNotification={() => setScreen('notification')}
+      onSeeMore={(products: Product[]) => { setProductList(products); setScreen('productList'); }}
+    />;
   }
   if (screen === 'category') {
     return <CategoryScreen />;
   }
   if (screen === 'productDetail' && selectedProduct) {
-    return <ProductDetailScreen product={selectedProduct} onBack={() => setScreen('homeMain')} addToCart={addToCart} onPayNow={(product, quantity) => { addToCart(product, quantity); setScreen('cart'); }} />;
+    return <ProductDetailScreen 
+      product={selectedProduct} 
+      onBack={() => setScreen('homeMain')} 
+      onAddToCart={addToCart} 
+      onCheckout={(product) => { addToCart(product); setScreen('cart'); }}
+      onProductPress={(product) => { setSelectedProduct(product); setScreen('productDetail'); }}
+    />;
+  }
+  if (screen === 'productList') {
+    return <ProductListScreen products={productList} onProductPress={(product) => { setSelectedProduct(product); setScreen('productDetail'); }} onBack={() => setScreen('homeMain')} />;
   }
   if (screen === 'cart') {
-    return <CartScreen cart={cart} onBack={() => setScreen('homeMain')} onCheckout={handleGoToOrderInfo} />;
+    return <CartScreen cart={cart} onBack={() => setScreen('homeMain')} onCheckout={handleGoToOrderInfo} onRemoveItem={(productName) => setCart(prev => prev.filter(item => item.product.name !== productName))} />;
   }
   if (screen === 'orderInfo') {
     return <OrderInfoScreen orderTotal={orderTotal} onOrderSubmit={() => setScreen('orderPayment')} onBack={() => setScreen('cart')} />;
@@ -88,13 +115,21 @@ export default function HomeScreen() {
     return <OrderSuccessScreen onGoHome={() => { setCart([]); setScreen('homeMain'); }} />;
   }
   if (screen === 'profile') {
-    return <ProfileScreen onLogout={() => setScreen('welcome')} onBack={() => setScreen('homeMain')} onChangePassword={() => setScreen('changePassword')} onFeedback={() => setScreen('feedback')} onGoSupport={() => setScreen('supportTopic')} />;
+    return <ProfileScreen
+      user={user}
+      onLogout={() => setScreen('welcome')}
+      onBack={() => setScreen('homeMain')}
+      onChangePassword={() => setScreen('changePassword')}
+      onFeedback={() => setScreen('feedback')}
+      onGoSupport={() => setScreen('supportTopic')}
+      onEditProfile={() => setScreen('editProfile')}
+    />;
   }
   if (screen === 'changePassword') {
     return <ChangePasswordScreen onBack={() => setScreen('profile')} onSuccess={() => setScreen('profile')} />;
   }
   if (screen === 'feedback') {
-    return <FeedbackScreen onBack={() => setScreen('profile')} onGoSupport={() => setScreen('supportTopic')} />;
+    return <FeedbackScreen onBack={() => setScreen('profile')} />;
   }
   if (screen === 'supportTopic') {
     return <SupportTopicScreen onBack={() => setScreen('profile')} onSelectTopic={(topic) => { setSelectedSupportTopic(topic); setScreen('supportChat'); }} />;
@@ -107,6 +142,13 @@ export default function HomeScreen() {
   }
   if (screen === 'notification') {
     return <NotificationScreen onBack={() => setScreen('homeMain')} />;
+  }
+  if (screen === 'editProfile') {
+    return <EditProfileScreen
+      user={user}
+      onBack={() => setScreen('profile')}
+      onSave={(newUser) => { setUser({ ...user, ...newUser }); setScreen('profile'); }}
+    />;
   }
   return <WelcomeScreen navigation={{ navigate: (s) => setScreen(s === 'Register' ? 'register' : 'login') }} />;
 }

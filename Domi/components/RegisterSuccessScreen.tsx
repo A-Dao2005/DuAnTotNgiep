@@ -1,26 +1,72 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
-interface RegisterSuccessScreenProps {
-  onLogin?: () => void;
-}
+type RegisterSuccessScreenProps = {
+  navigation?: {
+    navigate: (screen: string) => void;
+  };
+};
 
-const RegisterSuccessScreen: React.FC<RegisterSuccessScreenProps> = ({ onLogin }) => (
-  <View style={styles.container}>
-    <Text style={styles.title}>Đăng ký thành công!</Text>
-    <Text style={styles.desc}>Bạn đã đăng ký tài khoản thành công. Vui lòng đăng nhập để tiếp tục.</Text>
-    <TouchableOpacity style={styles.loginBtn} onPress={onLogin}>
-      <Text style={styles.loginBtnText}>Đăng nhập</Text>
-    </TouchableOpacity>
-  </View>
-);
+const RegisterSuccessScreen: React.FC<RegisterSuccessScreenProps> = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Đăng ký thành công</Text>
+      <View style={styles.iconWrapper}>
+        <View style={styles.circle}>
+          <MaterialIcons name="check" size={80} color="#fff" />
+        </View>
+      </View>
+      <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate && navigation.navigate('Login')}>
+        <Text style={styles.buttonText}>Tiếp tục đăng nhập</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default RegisterSuccessScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8DC', justifyContent: 'center', alignItems: 'center', padding: 16 },
-  title: { fontWeight: 'bold', fontSize: 22, color: '#388e3c', marginBottom: 16 },
-  desc: { color: '#222', fontSize: 15, marginBottom: 24, textAlign: 'center' },
-  loginBtn: { backgroundColor: '#E53935', borderRadius: 20, paddingVertical: 12, paddingHorizontal: 40 },
-  loginBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-});
-
-export default RegisterSuccessScreen; 
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    color: '#bdbdbd',
+    fontSize: 18,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: 20,
+    left: 10,
+  },
+  iconWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circle: {
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    backgroundColor: '#00D12E',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 100,
+    marginBottom: 40,
+  },
+  button: {
+    backgroundColor: '#FF6C00',
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    marginBottom: 60,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+}); 
