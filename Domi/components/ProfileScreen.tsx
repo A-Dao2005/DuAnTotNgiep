@@ -81,7 +81,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
         <TouchableOpacity style={styles.supportBtn} onPress={onGoSupport}>
           <Text style={styles.supportBtnText}>Liên hệ hỗ trợ/góp ý tư vấn</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.supportBtn}><Text style={styles.supportBtnText}>Thông tin về MGF</Text></TouchableOpacity>
+      
       </View>
       {showLogoutConfirm && (
         <View style={styles.confirmOverlay}>
