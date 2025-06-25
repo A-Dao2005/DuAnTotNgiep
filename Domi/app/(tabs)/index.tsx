@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import WelcomeScreen from '@/components/WelcomeScreen';
-import LoginScreen from '@/components/LoginScreen';
-import RegisterScreen from '@/components/RegisterScreen';
-import RegisterSuccessScreen from '@/components/RegisterSuccessScreen';
-import HomeMainScreen from '@/components/HomeMainScreen';
-import CategoryScreen from '@/components/CategoryScreen';
-import ProductDetailScreen, { Product } from '@/components/ProductDetailScreen';
 import CartScreen from '@/components/CartScreen';
+import CategoryScreen from '@/components/CategoryScreen';
+import ChangePasswordScreen from '@/components/ChangePasswordScreen';
+import EditProfileScreen from '@/components/EditProfileScreen';
+import FeedbackScreen from '@/components/FeedbackScreen';
+import HomeMainScreen from '@/components/HomeMainScreen';
+import LoginScreen from '@/components/LoginScreen';
+import NotificationScreen from '@/components/NotificationScreen';
 import OrderInfoScreen from '@/components/OrderInfoScreen';
 import OrderPaymentScreen from '@/components/OrderPaymentScreen';
 import OrderSuccessScreen from '@/components/OrderSuccessScreen';
-import ProfileScreen from '@/components/ProfileScreen';
-import ChangePasswordScreen from '@/components/ChangePasswordScreen';
-import FeedbackScreen from '@/components/FeedbackScreen';
-import SupportTopicScreen from '@/components/SupportTopicScreen';
-import SupportChatScreen from '@/components/SupportChatScreen';
-import SearchScreen from '@/components/SearchScreen';
-import NotificationScreen from '@/components/NotificationScreen';
+import ProductDetailScreen, { Product } from '@/components/ProductDetailScreen';
 import ProductListScreen from '@/components/ProductListScreen';
-import EditProfileScreen from '@/components/EditProfileScreen';
+import ProfileScreen from '@/components/ProfileScreen';
+import RegisterScreen from '@/components/RegisterScreen';
+import RegisterSuccessScreen from '@/components/RegisterSuccessScreen';
+import SearchScreen from '@/components/SearchScreen';
+import SupportChatScreen from '@/components/SupportChatScreen';
+import SupportTopicScreen from '@/components/SupportTopicScreen';
+import WelcomeScreen from '@/components/WelcomeScreen';
+import { useState } from 'react';
 
 export default function HomeScreen() {
   const [user, setUser] = useState({

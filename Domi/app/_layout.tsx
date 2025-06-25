@@ -6,6 +6,10 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+if (typeof global.setImmediate === 'undefined') {
+  global.setImmediate = ((fn: (...args: any[]) => void, ...args: any[]): number => setTimeout(fn, 0, ...args)) as any;
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({

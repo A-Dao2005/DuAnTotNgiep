@@ -1,5 +1,7 @@
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { auth } from '../firebaseConfig';
 
 type RegisterScreenProps = {
   navigation?: {
@@ -11,6 +13,25 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleRegister = async () => {
+    setError(null);
+    if (!name || !password || !rePassword) {
+      setError('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+    if (password !== rePassword) {
+      setError('Mật khẩu nhập lại không khớp');
+      return;
+    }
+    try {
+      await createUserWithEmailAndPassword(auth, name, password);
+      navigation?.navigate && navigation.navigate('RegisterSuccess');
+    } catch (err: any) {
+      setError(err.message || 'Đăng ký thất bại');
+    }
+  };
 
   return (
     <ImageBackground source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.background}>
@@ -49,9 +70,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
             secureTextEntry
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate && navigation.navigate('RegisterSuccess')}>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>ĐĂNG KÝ</Text>
         </TouchableOpacity>
+        {error && <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text>}
         <View style={styles.bottomTextContainer}>
           <Text style={styles.bottomText}>Bạn có tài khoản rồi? </Text>
           <TouchableOpacity onPress={() => navigation?.navigate && navigation.navigate('Login')}>

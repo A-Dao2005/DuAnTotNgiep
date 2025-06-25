@@ -1,5 +1,7 @@
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { auth } from '../firebaseConfig';
 
 type LoginScreenProps = {
   navigation?: {
@@ -10,6 +12,17 @@ type LoginScreenProps = {
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleLogin = async () => {
+    setError(null);
+    try {
+      await signInWithEmailAndPassword(auth, username, password);
+      navigation?.navigate && navigation.navigate('HomeMain');
+    } catch (err: any) {
+      setError(err.message || 'Đăng nhập thất bại');
+    }
+  };
 
   return (
     <ImageBackground source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.background}>
@@ -37,9 +50,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             secureTextEntry
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate && navigation.navigate('HomeMain')}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>ĐĂNG NHẬP</Text>
         </TouchableOpacity>
+        {error && <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text>}
         <View style={styles.bottomTextContainer}>
           <Text style={styles.bottomText}>Bạn chưa có tài khoản? </Text>
           <TouchableOpacity onPress={() => navigation?.navigate && navigation.navigate('Register')}>
