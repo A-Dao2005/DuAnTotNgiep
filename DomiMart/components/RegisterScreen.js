@@ -1,7 +1,5 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { auth } from '../firebaseConfig';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -19,12 +17,7 @@ const RegisterScreen = ({ navigation }) => {
       setError('Mật khẩu nhập lại không khớp');
       return;
     }
-    try {
-      await createUserWithEmailAndPassword(auth, name, password);
-      navigation?.navigate && navigation.navigate('RegisterSuccess');
-    } catch (err) {
-      setError(err.message || 'Đăng ký thất bại');
-    }
+    navigation?.navigate && navigation.navigate('RegisterSuccess');
   };
 
   return (

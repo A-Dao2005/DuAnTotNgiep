@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
+////dxx
 const initialNotifications = [
   {
     id: '1',

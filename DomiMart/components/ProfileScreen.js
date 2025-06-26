@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-
+///ghhjhgjgh
+//jk
 const ProfileScreen = ({
   user = {
     name: 'Nguyen Van A',

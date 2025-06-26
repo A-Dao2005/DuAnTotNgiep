@@ -1,7 +1,5 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { auth } from '../firebaseConfig';
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -10,12 +8,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     setError(null);
-    try {
-      await signInWithEmailAndPassword(auth, username, password);
-      navigation?.navigate && navigation.navigate('HomeMain');
-    } catch (err) {
-      setError(err.message || 'Đăng nhập thất bại');
-    }
+    navigation?.navigate && navigation.navigate('HomeMain');
   };
 
   return (

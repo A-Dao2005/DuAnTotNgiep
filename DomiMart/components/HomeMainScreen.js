@@ -43,7 +43,7 @@ function HomeMainScreen(props) {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Image source={require('../assets/images/icon.png')} style={styles.logo} />
+        <Image source={require('../assets/icon.png')} style={styles.logo} />
         <View style={styles.userInfo}>
           <Text style={styles.hello}>Xin chào,</Text>
           <Text style={styles.userName}>{userName}</Text>
@@ -143,6 +143,32 @@ function HomeMainScreen(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFF8DC' },
+  header: { flexDirection: 'row', alignItems: 'center', padding: 16, backgroundColor: '#fff', elevation: 2 },
+  logo: { width: 48, height: 48, borderRadius: 24, marginRight: 12 },
+  userInfo: { flex: 1 },
+  hello: { fontSize: 14, color: '#888' },
+  userName: { fontWeight: 'bold', fontSize: 18, color: '#222' },
+  avatar: { width: 40, height: 40, borderRadius: 20, marginLeft: 8 },
+  banner: { width: '100%', height: 160, borderRadius: 12 },
+  sectionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18, marginBottom: 8, paddingHorizontal: 16 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#222' },
+  seeMore: { color: '#E53935', fontSize: 14 },
+  productsRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 16 },
+  productCard: { backgroundColor: '#fff', borderRadius: 12, padding: 10, alignItems: 'center', width: 140, elevation: 2 },
+  productImg: { width: 100, height: 80, borderRadius: 8, marginBottom: 8 },
+  productName: { fontWeight: 'bold', fontSize: 15, color: '#222', marginBottom: 4 },
+  productPrice: { color: '#E53935', fontWeight: 'bold', fontSize: 14 },
+  searchRow: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 16, marginBottom: 10 },
+  searchInput: { backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 18, paddingVertical: 8, fontSize: 15, flex: 1, borderWidth: 1, borderColor: '#eee' },
+  categoryRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 16, marginHorizontal: 8 },
+  categoryBtn: { backgroundColor: '#fff', borderRadius: 20, paddingVertical: 8, paddingHorizontal: 18, marginHorizontal: 4, borderWidth: 1, borderColor: '#E53935' },
+  categoryBtnText: { color: '#E53935', fontWeight: 'bold', fontSize: 14 },
+  tabBar: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', height: 60, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#eee', elevation: 8 },
+  tabBtn: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+});
 
 export { productsByCategory };
 export default HomeMainScreen;
