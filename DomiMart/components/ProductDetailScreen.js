@@ -42,9 +42,26 @@ const ProductDetailScreen = ({ product, onAddToCart, onCheckout, onBack, onProdu
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.otherRow}>
             {otherProducts.map((prod, idx) => (
               <TouchableOpacity key={idx} style={styles.otherCard} onPress={() => onProductPress && onProductPress(prod)}>
+                {prod.isSale && (
+                  <View style={styles.saleTag}>
+                    <Text style={styles.saleTagText}>-{prod.isSale}%</Text>
+                  </View>
+                )}
+                {prod.isFavorite && (
+                  <View style={styles.favoriteTag}>
+                    <Text style={styles.favoriteTagText}>Yêu thích</Text>
+                  </View>
+                )}
                 <Image source={{ uri: prod.img }} style={styles.otherImg} />
-                <Text style={styles.otherName}>{prod.name}</Text>
-                <Text style={styles.otherPrice}>{prod.price}</Text>
+                <Text style={styles.otherName} numberOfLines={2}>{prod.name}</Text>
+                <View style={styles.priceRow}>
+                  <Text style={styles.otherPrice}>{prod.price}</Text>
+                  {prod.priceOld && (
+                    <Text style={styles.oldPrice}>{prod.priceOld}</Text>
+                  )}
+                </View>
+                <Text style={styles.soldText}>Đã bán {prod.sold >= 1000 ? (prod.sold/1000).toFixed(1) + 'k' : prod.sold}</Text>
+                <Text style={styles.shopText}>{prod.shop}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -116,17 +133,80 @@ const styles = StyleSheet.create({
   toastText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   otherBox: { backgroundColor: '#fff', padding: 12 },
   otherTitle: { fontWeight: 'bold', fontSize: 16, marginBottom: 8, color: '#222' },
-  otherRow: { flexDirection: 'row', gap: 10 },
+  otherRow: { flexDirection: 'row', paddingHorizontal: 8 },
   otherCard: {
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 8,
     alignItems: 'center',
-    width: 110,
+    width: 120,
     elevation: 2,
-    marginRight: 10,
+    marginRight: 8,
+    marginLeft: 0,
+    position: 'relative',
   },
-  otherImg: { width: 70, height: 70, borderRadius: 8, marginBottom: 5 },
+  otherImg: { width: 60, height: 60, borderRadius: 8, marginBottom: 5, resizeMode: 'cover' },
   otherName: { fontWeight: 'bold', fontSize: 13, color: '#222', textAlign: 'center' },
-  otherPrice: { color: '#E53935', fontSize: 13, marginTop: 2, textAlign: 'center' },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    marginTop: 2,
+  },
+  otherPrice: {
+    color: '#E53935',
+    fontSize: 13,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  oldPrice: {
+    color: '#888',
+    fontSize: 11,
+    textDecorationLine: 'line-through',
+    marginLeft: 4,
+  },
+  soldText: {
+    color: '#888',
+    fontSize: 11,
+    marginTop: 2,
+    marginBottom: 2,
+    textAlign: 'center',
+  },
+  shopText: {
+    color: '#1976D2',
+    fontSize: 11,
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  saleTag: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    backgroundColor: '#FF5252',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    zIndex: 2,
+  },
+  saleTagText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  favoriteTag: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: '#FF9800',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    zIndex: 2,
+  },
+  favoriteTagText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
 });

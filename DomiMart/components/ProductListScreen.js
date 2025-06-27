@@ -6,6 +6,10 @@ const ProductListScreen = ({ products, onProductPress, onBack }) => {
   const productsWithSold = products.map((p) => ({
     ...p,
     sold: p.sold ?? Math.floor(Math.random() * 1000 + 1),
+    priceOld: p.priceOld ?? '',
+    isSale: p.isSale ?? '',
+    isFavorite: p.isFavorite ?? false,
+    shop: p.shop ?? 'DomiMart',
   }));
   const filteredProducts = productsWithSold.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
@@ -29,14 +33,27 @@ const ProductListScreen = ({ products, onProductPress, onBack }) => {
         keyExtractor={(item) => item.name}
         numColumns={2}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.productCard} onPress={() => onProductPress(item)}>
-            <Image source={{ uri: item.img }} style={styles.productImg} />
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>{item.price}</Text>
-            <View style={styles.infoRow}>
-              <Text style={styles.rating}>⭐ {item.rating ?? 4}</Text>
-              <Text style={styles.sold}>{item.sold} đã bán</Text>
+          <TouchableOpacity style={styles.categoryProductCard} onPress={() => onProductPress(item)}>
+            {item.isSale ? (
+              <View style={styles.saleTag}>
+                <Text style={styles.saleTagText}>-{item.isSale}%</Text>
+              </View>
+            ) : null}
+            {item.isFavorite ? (
+              <View style={styles.favoriteTag}>
+                <Text style={styles.favoriteTagText}>Yêu thích</Text>
+              </View>
+            ) : null}
+            <Image source={{ uri: item.img }} style={styles.categoryProductImg} />
+            <Text style={styles.categoryProductName} numberOfLines={2}>{item.name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
+              <Text style={styles.categoryProductPrice}>{item.price}</Text>
+              {item.priceOld ? (
+                <Text style={styles.oldPrice}>{item.priceOld}</Text>
+              ) : null}
             </View>
+            <Text style={styles.soldText}>Đã bán {item.sold >= 1000 ? (item.sold/1000).toFixed(1) + 'k' : item.sold}</Text>
+            <Text style={styles.shopText}>{item.shop}</Text>
           </TouchableOpacity>
         )}
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -75,45 +92,83 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flex: 0.9,
   },
-  productCard: {
-    flex: 1,
+  categoryProductCard: {
     backgroundColor: '#fff',
-    borderRadius: 10,
-    margin: 6,
+    borderRadius: 16,
     padding: 10,
     alignItems: 'center',
+    width: '47%',
+    marginBottom: 16,
     elevation: 2,
+    marginHorizontal: '1.5%',
   },
-  productImg: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+  categoryProductImg: {
+    width: '90%',
+    height: 120,
+    borderRadius: 10,
     marginBottom: 8,
+    resizeMode: 'cover',
   },
-  productName: {
+  categoryProductName: {
     fontWeight: 'bold',
-    fontSize: 15,
-    color: '#222',
-    textAlign: 'center',
-  },
-  productPrice: {
-    color: '#E53935',
-    fontSize: 14,
-    marginTop: 2,
-    textAlign: 'center',
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 4,
-  },
-  rating: {
-    color: '#FFA000',
     fontSize: 13,
+    color: '#222',
+    marginBottom: 4,
+    textAlign: 'center',
   },
-  sold: {
+  categoryProductPrice: {
+    color: '#E53935',
+    fontWeight: 'bold',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  oldPrice: {
     color: '#888',
     fontSize: 13,
+    textDecorationLine: 'line-through',
+    marginLeft: 6,
+  },
+  soldText: {
+    color: '#888',
+    fontSize: 13,
+    marginTop: 2,
+    marginBottom: 2,
+    textAlign: 'center',
+  },
+  shopText: {
+    color: '#1976D2',
+    fontSize: 13,
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  saleTag: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    backgroundColor: '#FF5252',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    zIndex: 2,
+  },
+  saleTagText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  favoriteTag: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: '#FF9800',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    zIndex: 2,
+  },
+  favoriteTagText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
