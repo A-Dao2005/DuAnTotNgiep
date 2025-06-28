@@ -1,0 +1,107 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f6fa;
+}
+
+.sidebar {
+  width: 240px;
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+  height: 100vh;
+}
+
+.sidebar a {
+  color: white;
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #34495e;
+}
+
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter label {
+  font-size: 14px;
+}
+
+.filter input[type="date"] {
+  padding: 6px 10px;
+  margin-left: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-filter {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-filter:hover {
+  background-color: #0056b3;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.history-table th,
+.history-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.history-table th {
+  background-color: #ecf0f1;
+  font-weight: bold;
+}
+
+.history-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.done {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.cancelled {
+  color: #dc3545;
+  font-weight: bold;
+}

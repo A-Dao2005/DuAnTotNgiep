@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lịch sử đơn hàng</title>
+  <link rel="stylesheet" href="history.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h3>Admin Panel</h3>
+    <a href="products.html">📦 Quản lý sản phẩm</a>
+    <a href="orders.html">📋 Đơn hàng</a>
+    <a href="chat.html">💬 Chat khách hàng</a>
+    <a href="statistics.html">📊 Thống kê</a>
+    <a href="history.html" class="active">📁 Lịch sử đơn hàng</a>
+    <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+  </div>
+
+  <div class="main">
+    <h2>📁 Lịch sử đơn hàng</h2>
+
+    <div class="filter">
+      <label>Từ ngày:
+        <input type="date">
+      </label>
+      <label>Đến ngày:
+        <input type="date">
+      </label>
+      <button class="btn-filter">Lọc</button>
+    </div>
+
+    <table class="history-table">
+      <thead>
+        <tr><th>Mã đơn</th><th>Khách hàng</th><th>Trạng thái</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>#998</td><td>Phan Văn C</td><td class="done">Hoàn tất</td></tr>
+        <tr><td>#999</td><td>Lê Thị D</td><td class="cancelled">Huỷ</td></tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

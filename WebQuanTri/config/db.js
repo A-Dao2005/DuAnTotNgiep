@@ -1,0 +1,1 @@
+const api = "mongodb+srv://minhnhat19040909:Adao2005@cluster0.qivv2hr.mongodb.net/";

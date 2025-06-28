@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thống kê</title>
+  <link rel="stylesheet" href="statistics.css" />
+</head>
+<body>
+
+<div class="sidebar">
+  <h3>Admin Panel</h3>
+  <a href="products.html">📦 Quản lý sản phẩm</a>
+  <a href="orders.html">📋 Đơn hàng</a>
+  <a href="chat.html">💬 Chat khách hàng</a>
+  <a href="statistics.html" class="active">📊 Thống kê</a>
+  <a href="history.html">📁 Lịch sử đơn hàng</a>
+  <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+</div>
+
+<div class="main">
+  <h2>📊 Thống kê bán hàng</h2>
+
+  <div class="filter-bar">
+    <label> Từ ngày: <input type="date" /> </label>
+    <label> Đến ngày: <input type="date" /> </label>
+    <button class="btn-search">Tìm kiếm</button>
+    <div class="chart-type">
+      Loại biểu đồ:
+      <label><input type="radio" name="chart" checked /> Cột</label>
+      <label><input type="radio" name="chart" /> Đường kẻ</label>
+    </div>
+  </div>
+
+  <div class="chart-area">
+    <div class="bar-chart-placeholder">[Biểu đồ doanh thu theo ngày hiển thị ở đây]</div>
+    <div class="legend">
+      <span class="red-box"></span> Giá trị HĐ
+      <span class="blue-box"></span> Thanh toán
+    </div>
+  </div>
+
+  <div class="summary">
+    <p><strong>Doanh thu hôm nay:</strong> 2.500.000₫</p>
+    <p><strong>Doanh thu tuần:</strong> 12.000.000₫</p>
+    <p><strong>Doanh thu tháng:</strong> 25.000.000₫</p>
+  </div>
+
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th>STT</th><th>Ngày</th><th>Số hóa đơn</th><th>Tổng hàng</th><th>Giảm giá</th><th>Giá trị HĐ</th><th>Thanh toán</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>26/11/2012</td><td>2</td><td>143,500</td><td>9,050</td><td>134,450</td><td>134,450</td></tr>
+      <tr><td>2</td><td>27/11/2012</td><td>17</td><td>2,993,820</td><td>196,910</td><td>2,797,410</td><td>2,754,510</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý sản phẩm</title>
+  <link rel="stylesheet" href="products.css">
+  <style>
+    #modal, #modal-delete {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .modal-content button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="sidebar">
+  <h3>Admin Panel</h3>
+  <a href="products.html" class="active">📦 Quản lý sản phẩm</a>
+  <a href="orders.html">📋 Đơn hàng</a>
+  <a href="chat.html">💬 Chat khách hàng</a>
+  <a href="statistics.html">📊 Thống kê</a>
+  <a href="history.html">📁 Lịch sử đơn hàng</a>
+  <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+</div>
+
+<h2>📦 Quản lý sản phẩm</h2>
+<button onclick="openModal()">+ Thêm sản phẩm</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ảnh</th>
+      <th>Mã SP</th>
+      <th>Tên</th>
+      <th>Giá</th>
+      <th>Phân loại</th>
+      <th>Hành động</th>
+    </tr>
+  </thead>
+  <tbody id="product-body"></tbody>
+</table>
+
+<div id="modal">
+  <div class="modal-content">
+    <h3 id="modal-title">Thêm sản phẩm</h3>
+    <input id="image" placeholder="Link ảnh">
+    <input id="maSP" placeholder="Mã SP">
+    <input id="tenSanPham" placeholder="Tên sản phẩm">
+    <input id="giaSanPham" placeholder="Giá">
+    <input id="phanLoai" placeholder="Phân loại">
+    <button onclick="saveProduct()">Lưu</button>
+    <button onclick="closeModal()">Hủy</button>
+  </div>
+</div>
+
+<div id="modal-delete">
+  <div class="modal-content">
+    <h3>Bạn có chắc chắn muốn xoá sản phẩm này?</h3>
+    <button onclick="confirmDelete()">Xoá</button>
+    <button onclick="closeDeleteModal()">Hủy</button>
+  </div>
+</div>
+
+<script>
+  const API_URL = 'http://localhost:5000/api/products';
+  let editId = null;
+  let deleteId = null;
+
+  function openModal(product = null) {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modal-title').innerText = product ? 'Sửa sản phẩm' : 'Thêm sản phẩm';
+    editId = product?._id || null;
+
+    document.getElementById('image').value = product?.image || '';
+    document.getElementById('maSP').value = product?.maSP || '';
+    document.getElementById('tenSanPham').value = product?.tenSanPham || '';
+    document.getElementById('giaSanPham').value = product?.giaSanPham || '';
+    document.getElementById('phanLoai').value = product?.phanLoai || '';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    editId = null;
+  }
+
+  function openDeleteModal(id) {
+    deleteId = id;
+    document.getElementById('modal-delete').style.display = 'flex';
+  }
+
+  function closeDeleteModal() {
+    deleteId = null;
+    document.getElementById('modal-delete').style.display = 'none';
+  }
+
+  async function confirmDelete() {
+    await fetch(`${API_URL}/${deleteId}`, { method: 'DELETE' });
+    alert('Xoá thành công');
+    closeDeleteModal();
+    fetchProducts();
+  }
+
+  async function fetchProducts() {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    const tbody = document.getElementById('product-body');
+    tbody.innerHTML = '';
+
+    data.forEach(p => {
+      tbody.innerHTML += `
+        <tr data-id="${p._id}">
+          <td><img src="${p.image}" alt="Ảnh"></td>
+          <td>${p.maSP}</td>
+          <td>${p.tenSanPham}</td>
+          <td>${p.giaSanPham}₫</td>
+          <td>${p.phanLoai}</td>
+          <td>
+            <button onclick='editProduct(${JSON.stringify(p)})'>Sửa</button>
+            <button onclick="openDeleteModal('${p._id}')">Xoá</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  function editProduct(product) {
+    openModal(product);
+  }
+
+  async function saveProduct() {
+    const image = document.getElementById('image').value;
+    const maSP = document.getElementById('maSP').value;
+    const tenSanPham = document.getElementById('tenSanPham').value;
+    const giaSanPham = document.getElementById('giaSanPham').value;
+    const phanLoai = document.getElementById('phanLoai').value;
+
+    const method = editId ? 'PUT' : 'POST';
+    const url = editId ? `${API_URL}/${editId}` : API_URL;
+
+    await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image, maSP, tenSanPham, giaSanPham, phanLoai })
+    });
+
+    alert(editId ? 'Cập nhật thành công!' : 'Thêm thành công!');
+    closeModal();
+    fetchProducts();
+  }
+
+  fetchProducts();
+</script>
+</body>
+</html>

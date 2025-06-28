@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Cài đặt tài khoản</title>
+  <link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+
+<div class="sidebar">
+  <h3>Admin Panel</h3>
+  <a href="products.html">📦 Quản lý sản phẩm</a>
+  <a href="orders.html">📋 Đơn hàng</a>
+  <a href="chat.html">💬 Chat khách hàng</a>
+  <a href="statistics.html">📊 Thống kê</a>
+  <a href="history.html">📁 Lịch sử đơn hàng</a>
+  <a href="settings.html" class="active">⚙️ Cài đặt tài khoản</a>
+</div>
+
+<div class="main">
+  <h2>⚙️ Cài đặt tài khoản</h2>
+
+  <form class="settings-form">
+    <label>Họ tên:
+      <input type="text" value="Đào Văn Minh" />
+    </label>
+    <label>Email:
+      <input type="email" value="minh@gmail.com" />
+    </label>
+    <label>Số điện thoại:
+      <input type="text" value="0327154423" />
+    </label>
+    <div class="form-buttons">
+      <button type="submit" class="btn-save">💾 Lưu thay đổi</button>
+      <button type="button" class="btn-change" onclick="openModal()">🔒 Đổi mật khẩu</button>
+    </div>
+  </form>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3>🔐 Đổi mật khẩu</h3>
+    <form class="change-password-form">
+      <label>Mật khẩu cũ:
+        <input type="password" required />
+      </label>
+      <label>Mật khẩu mới:
+        <input type="password" required />
+      </label>
+      <label>Xác nhận mật khẩu mới:
+        <input type="password" required />
+      </label>
+      <button type="submit" class="btn-save">Xác nhận</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function openModal() {
+  document.getElementById("modal").style.display = "block";
+}
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+window.onclick = function(event) {
+  if (event.target == document.getElementById("modal")) {
+    closeModal();
+  }
+}
+</script>
+
+</body>
+</html>

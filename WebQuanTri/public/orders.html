@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng</title>
+  <link rel="stylesheet" href="orders.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h3>Admin Panel</h3>
+    <a href="products.html">📦 Quản lý sản phẩm</a>
+    <a href="orders.html" class="active">📋 Đơn hàng</a>
+    <a href="chat.html">💬 Chat khách hàng</a>
+    <a href="statistics.html">📊 Thống kê</a>
+    <a href="history.html">📁 Lịch sử đơn hàng</a>
+    <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+  </div>
+
+  <div class="main">
+    <h2>📋 Quản lý đơn hàng</h2>
+
+    <h3>🆕 Đơn hàng mới</h3>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Mã đơn</th>
+          <th>Khách hàng</th>
+          <th>Thời gian</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#003</td>
+          <td>Phạm Văn C</td>
+          <td>25/06/2025 10:30</td>
+          <td>
+            <button class="btn-confirm">Xác nhận</button>
+            <button class="btn-cancel">Huỷ</button>
+          </td>
+        </tr>
+        <tr>
+          <td>#004</td>
+          <td>Lê Thị D</td>
+          <td>25/06/2025 11:15</td>
+          <td>
+            <button class="btn-confirm">Xác nhận</button>
+            <button class="btn-cancel">Huỷ</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:40px;">📦 Đơn hàng đang xử lý</h3>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Mã đơn</th>
+          <th>Khách hàng</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#001</td>
+          <td>Nguyễn Văn A</td>
+          <td>
+            <select>
+              <option>Chờ xác nhận</option>
+              <option>Đang giao</option>
+              <option>Hoàn tất</option>
+              <option>Đã hủy</option>
+            </select>
+          </td>
+          <td><button class="btn-update">Cập nhật</button></td>
+        </tr>
+        <tr>
+          <td>#002</td>
+          <td>Trần Thị B</td>
+          <td>
+            <select>
+              <option>Chờ xác nhận</option>
+              <option selected>Đang giao</option>
+              <option>Hoàn tất</option>
+              <option>Đã hủy</option>
+            </select>
+          </td>
+          <td><button class="btn-update">Cập nhật</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
