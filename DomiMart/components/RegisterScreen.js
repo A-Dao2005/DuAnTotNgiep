@@ -1,23 +1,92 @@
 import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 
 const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [rePassword, setRePassword] = useState('');
+  const [hoTen, setHoTen] = useState('');
+  const [email, setEmail] = useState('');
+  const [soDienThoai, setSoDienThoai] = useState('');
+  const [matKhau, setMatKhau] = useState('');
+  const [reMatKhau, setReMatKhau] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10,11}$/;
+    return phoneRegex.test(phone);
+  };
 
   const handleRegister = async () => {
     setError(null);
-    if (!name || !password || !rePassword) {
+    
+    // Validation
+    if (!hoTen || !email || !soDienThoai || !matKhau || !reMatKhau) {
       setError('Vui lòng nhập đầy đủ thông tin');
       return;
     }
-    if (password !== rePassword) {
+
+    if (!validateEmail(email)) {
+      setError('Email không hợp lệ');
+      return;
+    }
+
+    if (!validatePhone(soDienThoai)) {
+      setError('Số điện thoại không hợp lệ (10-11 số)');
+      return;
+    }
+
+    if (matKhau.length < 6) {
+      setError('Mật khẩu phải có ít nhất 6 ký tự');
+      return;
+    }
+
+    if (matKhau !== reMatKhau) {
       setError('Mật khẩu nhập lại không khớp');
       return;
     }
-    navigation?.navigate && navigation.navigate('RegisterSuccess');
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://192.168.1.10:5000/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          hoTen,
+          email,
+          soDienThoai,
+          matKhau
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        Alert.alert(
+          'Thành công',
+          'Đăng ký thành công!',
+          [
+            {
+              text: 'OK',
+              onPress: () => navigation?.navigate && navigation.navigate('RegisterSuccess')
+            }
+          ]
+        );
+      } else {
+        setError(data.message || 'Đăng ký thất bại');
+      }
+    } catch (error) {
+      console.error('Lỗi đăng ký:', error);
+      setError('Lỗi kết nối, vui lòng thử lại sau');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,42 +94,79 @@ const RegisterScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.title}>ĐĂNG KÝ</Text>
         <Text style={styles.subtitle}>Vui lòng điền đầy đủ thông tin để tạo tài khoản mới!</Text>
+        
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Họ và tên</Text>
           <TextInput
             style={styles.input}
-            value={name}
-            onChangeText={setName}
+            value={hoTen}
+            onChangeText={setHoTen}
             placeholder="Nguyen Van A"
             placeholderTextColor="#888"
           />
         </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="example@gmail.com"
+            placeholderTextColor="#888"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Số điện thoại</Text>
+          <TextInput
+            style={styles.input}
+            value={soDienThoai}
+            onChangeText={setSoDienThoai}
+            placeholder="0123456789"
+            placeholderTextColor="#888"
+            keyboardType="phone-pad"
+          />
+        </View>
+
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Mật khẩu</Text>
           <TextInput
             style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            placeholder="0123456789"
+            value={matKhau}
+            onChangeText={setMatKhau}
+            placeholder="Tối thiểu 6 ký tự"
             placeholderTextColor="#888"
             secureTextEntry
           />
         </View>
+
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Nhập lại Mật khẩu</Text>
           <TextInput
             style={styles.input}
-            value={rePassword}
-            onChangeText={setRePassword}
+            value={reMatKhau}
+            onChangeText={setReMatKhau}
             placeholder="******"
             placeholderTextColor="#888"
             secureTextEntry
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>ĐĂNG KÝ</Text>
+
+        <TouchableOpacity 
+          style={[styles.button, loading && styles.buttonDisabled]} 
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'ĐANG ĐĂNG KÝ...' : 'ĐĂNG KÝ'}
+          </Text>
         </TouchableOpacity>
-        {error && <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text>}
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
         <View style={styles.bottomTextContainer}>
           <Text style={styles.bottomText}>Bạn có tài khoản rồi? </Text>
           <TouchableOpacity onPress={() => navigation?.navigate && navigation.navigate('Login')}>
@@ -126,10 +232,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+  },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 18,
+  },
+  errorText: {
+    color: '#ff6b6b',
+    marginTop: 8,
+    textAlign: 'center',
+    fontSize: 14,
   },
   bottomTextContainer: {
     flexDirection: 'row',

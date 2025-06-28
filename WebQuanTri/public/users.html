@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Khách hàng</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="users.css">
+  <style>
+    body { font-family: 'Roboto', Arial, sans-serif; background: #f4f6fb; margin: 0; color: #222; }
+    .sidebar { position: fixed; left: 0; top: 0; width: 230px; height: 100vh; background: #1a2235; color: #fff; display: flex; flex-direction: column; box-shadow: 2px 0 8px #ccc; z-index: 100; padding-top: 0; }
+    .sidebar .logo { font-size: 22px; font-weight: 700; letter-spacing: 1px; text-align: center; padding: 28px 0 18px 0; background: #151a2b; margin-bottom: 18px; border-bottom: 1px solid #26304a; }
+    .sidebar a { display: flex; align-items: center; color: #fff; text-decoration: none; padding: 13px 32px; font-size: 17px; margin-bottom: 2px; border-left: 4px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; font-weight: 500; }
+    .sidebar a.active, .sidebar a:hover { background: #1976D2; border-left: 4px solid #FFD700; color: #fff; }
+    .main { margin-left: 230px; padding: 40px 30px 30px 30px; min-height: 100vh; background: #f4f6fb; }
+    h2 { font-size: 2rem; font-weight: 700; color: #1976D2; margin-bottom: 30px; letter-spacing: 1px; }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 2px 12px #e0e7ef; padding: 28px 24px 18px 24px; margin-bottom: 32px; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 6px #e0e7ef; margin-bottom: 18px; }
+    th { background: #1976D2; color: #fff; font-weight: 500; padding: 14px 0; font-size: 16px; border: none; }
+    td { padding: 13px 0; font-size: 15px; border-bottom: 1px solid #f0f0f0; text-align: center; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #f5faff; }
+    .btn-delete { background: #ff4757; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .btn-delete:hover { background: #ff3742; }
+    .loading { text-align: center; padding: 20px; color: #666; }
+    .no-data { text-align: center; padding: 40px; color: #666; font-style: italic; }
+    @media (max-width: 900px) { .sidebar { width: 60px; } .sidebar .logo { font-size: 0; padding: 18px 0; } .sidebar a { font-size: 0; padding: 13px 18px; } .sidebar a:before { font-size: 22px; } .main { margin-left: 60px; padding: 20px 6px 20px 6px; } h2 { font-size: 1.2rem; } }
+  </style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">DomiMart Admin</div>
+  <a href="products.html">📦 Quản lý sản phẩm</a>
+  <a href="orders.html">📋 Đơn hàng</a>
+  <a href="users.html" class="active">👤 Khách hàng</a>
+  <a href="chat.html">💬 Chat khách hàng</a>
+  <a href="statistics.html">📊 Thống kê</a>
+  <a href="history.html">📁 Lịch sử đơn hàng</a>
+  <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+</div>
+<div class="main">
+  <h2>�� Danh sách khách hàng đã đăng ký</h2>
+  <div class="card">
+    <div id="loading" class="loading">Đang tải dữ liệu...</div>
+    <div id="noData" class="no-data" style="display: none;">Chưa có khách hàng nào đăng ký</div>
+    <table id="usersTable" style="display: none;">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>Số điện thoại</th>
+          <th>Ngày đăng ký</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="usersTableBody">
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// API URL
+const API_URL = 'http://localhost:5000/api/users';
+
+// Load danh sách users
+async function loadUsers() {
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    
+    if (data.success) {
+      displayUsers(data.users);
+    } else {
+      showError('Lỗi khi tải dữ liệu');
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    showError('Lỗi kết nối server');
+  }
+}
+
+// Hiển thị danh sách users
+function displayUsers(users) {
+  const loading = document.getElementById('loading');
+  const noData = document.getElementById('noData');
+  const table = document.getElementById('usersTable');
+  const tbody = document.getElementById('usersTableBody');
+  
+  loading.style.display = 'none';
+  
+  if (users.length === 0) {
+    noData.style.display = 'block';
+    return;
+  }
+  
+  table.style.display = 'table';
+  tbody.innerHTML = '';
+  
+  users.forEach((user, index) => {
+    const row = document.createElement('tr');
+    const date = new Date(user.ngayDangKy).toLocaleDateString('vi-VN');
+    
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${user.hoTen}</td>
+      <td>${user.email}</td>
+      <td>${user.soDienThoai}</td>
+      <td>${date}</td>
+      <td>
+        <button class="btn-delete" onclick="deleteUser('${user._id}')">Xóa</button>
+      </td>
+    `;
+    
+    tbody.appendChild(row);
+  });
+}
+
+// Xóa user
+async function deleteUser(userId) {
+  if (!confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) {
+    return;
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/${userId}`, {
+      method: 'DELETE'
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      alert('Xóa khách hàng thành công!');
+      loadUsers(); // Reload danh sách
+    } else {
+      alert('Lỗi khi xóa khách hàng: ' + data.message);
+    }
+  } catch (error) {
+    console.error('Lỗi:', error);
+    alert('Lỗi kết nối server');
+  }
+}
+
+// Hiển thị lỗi
+function showError(message) {
+  const loading = document.getElementById('loading');
+  loading.innerHTML = `<span style="color: red;">${message}</span>`;
+}
+
+// Tự động refresh dữ liệu mỗi 30 giây
+function startAutoRefresh() {
+  setInterval(loadUsers, 30000);
+}
+
+// Khởi tạo trang
+document.addEventListener('DOMContentLoaded', function() {
+  loadUsers();
+  startAutoRefresh();
+});
+</script>
+</body>
+</html>

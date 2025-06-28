@@ -8,9 +8,27 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     setError(null);
-    navigation?.navigate && navigation.navigate('HomeMain');
+    if (!username || !password) {
+      setError('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+    try {
+      const response = await fetch('http://192.168.1.10:5000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username, matKhau: password }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        // Lưu thông tin user nếu cần
+        navigation.navigate('HomeMain'); // hoặc màn hình chính của bạn
+      } else {
+        setError(data.message || 'Đăng nhập thất bại');
+      }
+    } catch (error) {
+      setError('Lỗi kết nối, vui lòng thử lại sau');
+    }
   };
-
   return (
     <ImageBackground source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.background}>
       <View style={styles.container}>
