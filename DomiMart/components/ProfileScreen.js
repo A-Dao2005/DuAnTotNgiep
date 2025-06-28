@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { UserContext } from '../UserContext';
 ///ghhjhgjgh
 //jk
 const ProfileScreen = ({
-  user = {
-    name: 'Nguyen Van A',
-    id: '123456789',
-    phone: '09876543210',
-    email: 'hello@gmail.com',
-    address: '81 Hoàng Hoa Thám',
-    avatar: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
-  },
+  user: userProp,
   onLogout,
   onEditProfile,
   onGoOrder,
@@ -19,6 +13,15 @@ const ProfileScreen = ({
   onChangePassword,
   onFeedback,
 }) => {
+  const { user: userContext } = useContext(UserContext) || {};
+  const user = userContext || userProp || {
+    name: 'Nguyen Van A',
+    id: '123456789',
+    phone: '09876543210',
+    email: 'hello@gmail.com',
+    address: '81 Hoàng Hoa Thám',
+    avatar: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
+  };
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   return (

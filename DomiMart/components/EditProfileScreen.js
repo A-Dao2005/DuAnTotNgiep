@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { UserContext } from '../UserContext';
 
-interface EditProfileScreenProps {
-  user?: {
-    name: string;
-    phone: string;
-    email: string;
-    address: string;
-    avatar?: string;
-  };
-  onBack?: () => void;
-  onSave?: (user: { name: string; phone: string; email: string; address: string; avatar?: string }) => void;
-}
+const EditProfileScreen = (props) => {
+  const { user: userContext, setUser } = useContext(UserContext);
+  const user = props.user || userContext || { name: '', phone: '', email: '', address: '', avatar: undefined, id: '' };
 
-const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user = { name: '', phone: '', email: '', address: '', avatar: undefined }, onBack, onSave }) => {
   const [name, setName] = useState(user.name);
   const [phone, setPhone] = useState(user.phone);
   const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user.address);
   const [avatar, setAvatar] = useState(user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg');
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    setName(user.name);
+    setPhone(user.phone);
+    setEmail(user.email);
+    setAddress(user.address);
+    setAvatar(user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg');
+  }, [user]);
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -39,18 +39,46 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ user = { name: ''
     }
   };
 
-  const handleSave = () => {
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-      if (onSave) onSave({ name, phone, email, address, avatar });
-      if (onBack) onBack();
-    }, 1200);
+  const handleSave = async () => {
+    try {
+      const response = await fetch('http://192.168.1.10:5000/api/users/update-info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: user.id,
+          hoTen: name,
+          email,
+          soDienThoai: phone,
+          diaChi: address
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUser({
+          ...user,
+          name: data.user.hoTen,
+          email: data.user.email,
+          phone: data.user.soDienThoai,
+          address: data.user.diaChi,
+          avatar
+        });
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          if (props.onSave) props.onSave({ name, phone, email, address, avatar });
+          if (props.onBack) props.onBack();
+        }, 1200);
+      } else {
+        Alert.alert('Lỗi', data.message || 'Cập nhật thất bại');
+      }
+    } catch (e) {
+      Alert.alert('Lỗi', 'Lỗi kết nối, vui lòng thử lại sau');
+    }
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onBack} style={styles.backBtn}>
+      <TouchableOpacity onPress={props.onBack} style={styles.backBtn}>
         <Text style={{ fontSize: 22 }}>{'←'}</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>

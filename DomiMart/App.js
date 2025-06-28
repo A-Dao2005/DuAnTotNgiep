@@ -19,8 +19,17 @@ import SupportChatScreen from './components/SupportChatScreen';
 import SupportTopicScreen from './components/SupportTopicScreen';
 import WelcomeScreen from './components/WelcomeScreen';
 import { useState } from 'react';
+import { UserProvider } from './UserContext';
 
-export default function HomeScreen() {
+export default function App() {
+  return (
+    <UserProvider>
+      <MainApp />
+    </UserProvider>
+  );
+}
+
+function MainApp() {
   const [user, setUser] = useState({
     name: 'Nguyen Van A',
     id: '123456789',
@@ -28,7 +37,6 @@ export default function HomeScreen() {
     email: 'hello@gmail.com',
     address: '81 Hoàng Hoa Thám',
   });
-
   const [screen, setScreen] = useState('welcome');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [cart, setCart] = useState([]);
@@ -53,7 +61,7 @@ export default function HomeScreen() {
 
   const handleGoToOrderInfo = () => {
     const total = cart.reduce((sum, item) => {
-      const price = Number(item.product.price.replace(/[^\d]/g, ''));
+      const price = Number(item.product.price.replace(/[^0-9]/g, ''));
       return sum + price * item.quantity;
     }, 0);
     setOrderTotal(total);
@@ -185,9 +193,8 @@ export default function HomeScreen() {
 
   if (screen === 'editProfile') {
     return <EditProfileScreen
-      user={user}
       onBack={() => setScreen('profile')}
-      onSave={(newUser) => { setUser({ ...user, ...newUser }); setScreen('profile'); }}
+      onSave={(newUser) => { setScreen('profile'); }}
     />;
   }
 

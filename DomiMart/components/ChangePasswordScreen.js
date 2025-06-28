@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { UserContext } from '../UserContext';
 
 const ChangePasswordScreen = ({ onBack, onSuccess }) => {
   const [oldPass, setOldPass] = useState('');
@@ -7,8 +8,9 @@ const ChangePasswordScreen = ({ onBack, onSuccess }) => {
   const [reNewPass, setReNewPass] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const { user } = useContext(UserContext);
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     setError('');
     if (!oldPass || !newPass || !reNewPass) {
       setError('Vui lòng nhập đầy đủ thông tin');
@@ -18,12 +20,29 @@ const ChangePasswordScreen = ({ onBack, onSuccess }) => {
       setError('Mật khẩu mới không khớp');
       return;
     }
-    // Giả lập đổi mật khẩu thành công
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-      if (onSuccess) onSuccess();
-    }, 1500);
+    try {
+      const response = await fetch('http://192.168.1.10:5000/api/users/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user?.email,
+          oldPassword: oldPass,
+          newPassword: newPass
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          if (onSuccess) onSuccess();
+        }, 1500);
+      } else {
+        setError(data.message || 'Đổi mật khẩu thất bại');
+      }
+    } catch (e) {
+      setError('Lỗi kết nối, vui lòng thử lại sau');
+    }
   };
 
   return (

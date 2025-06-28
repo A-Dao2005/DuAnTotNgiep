@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { UserContext } from '../UserContext';
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const { setUser } = useContext(UserContext);
 
   const handleLogin = async () => {
     setError(null);
@@ -20,8 +22,16 @@ const LoginScreen = ({ navigation }) => {
       });
       const data = await response.json();
       if (data.success) {
-        // Lưu thông tin user nếu cần
-        navigation.navigate('HomeMain'); // hoặc màn hình chính của bạn
+        // Map đúng trường dữ liệu từ API vào context
+        setUser({
+          name: data.user.hoTen,
+          email: data.user.email,
+          phone: data.user.soDienThoai,
+          id: data.user._id || data.user.id,
+          address: data.user.diaChi || '',
+          avatar: data.user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
+        });
+        navigation.navigate('HomeMain');
       } else {
         setError(data.message || 'Đăng nhập thất bại');
       }
