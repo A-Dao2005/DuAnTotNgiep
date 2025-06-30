@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { UserContext } from '../UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -22,6 +23,9 @@ const LoginScreen = ({ navigation }) => {
       });
       const data = await response.json();
       if (data.success) {
+        // Lưu token vào AsyncStorage
+        await AsyncStorage.setItem('authToken', data.token);
+        
         // Map đúng trường dữ liệu từ API vào context
         setUser({
           name: data.user.hoTen,
@@ -30,7 +34,9 @@ const LoginScreen = ({ navigation }) => {
           id: data.user._id || data.user.id,
           address: data.user.diaChi || '',
           avatar: data.user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
+          token: data.token
         });
+        console.log('Avatar nhận được:', data.user.avatar);
         navigation.navigate('HomeMain');
       } else {
         setError(data.message || 'Đăng nhập thất bại');
@@ -39,6 +45,7 @@ const LoginScreen = ({ navigation }) => {
       setError('Lỗi kết nối, vui lòng thử lại sau');
     }
   };
+
   return (
     <ImageBackground source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.background}>
       <View style={styles.container}>

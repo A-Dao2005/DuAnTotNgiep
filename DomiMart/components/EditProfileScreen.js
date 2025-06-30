@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { UserContext } from '../UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfileScreen = (props) => {
   const { user: userContext, setUser } = useContext(UserContext);
@@ -41,15 +42,20 @@ const EditProfileScreen = (props) => {
 
   const handleSave = async () => {
     try {
+      const token = await AsyncStorage.getItem('authToken');
       const response = await fetch('http://192.168.1.10:5000/api/users/update-info', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           id: user.id,
           hoTen: name,
           email,
           soDienThoai: phone,
-          diaChi: address
+          diaChi: address,
+          avatar: avatar
         })
       });
       const data = await response.json();
@@ -60,7 +66,7 @@ const EditProfileScreen = (props) => {
           email: data.user.email,
           phone: data.user.soDienThoai,
           address: data.user.diaChi,
-          avatar
+          avatar: data.user.avatar
         });
         setSuccess(true);
         setTimeout(() => {
@@ -130,4 +136,4 @@ const styles = StyleSheet.create({
   toastText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });
 
-export default EditProfileScreen; 
+export default EditProfileScreen;

@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { UserContext } from '../UserContext';
-///ghhjhgjgh
-//jk
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const ProfileScreen = ({
   user: userProp,
   onLogout,
@@ -13,7 +13,7 @@ const ProfileScreen = ({
   onChangePassword,
   onFeedback,
 }) => {
-  const { user: userContext } = useContext(UserContext) || {};
+  const { user: userContext, clearUser } = useContext(UserContext) || {};
   const user = userContext || userProp || {
     name: 'Nguyen Van A',
     id: '123456789',
@@ -23,6 +23,44 @@ const ProfileScreen = ({
     avatar: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
   };
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const token = await AsyncStorage.getItem('authToken');
+      
+      // Gọi API logout để blacklist token
+      if (token) {
+        await fetch('http://192.168.1.10:5000/api/users/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+      
+      // Xóa token và user data
+      await AsyncStorage.removeItem('authToken');
+      if (clearUser) {
+        await clearUser();
+      }
+      
+      setShowLogoutConfirm(false);
+      if (onLogout) {
+        onLogout();
+      }
+    } catch (error) {
+      console.error('Lỗi logout:', error);
+      // Vẫn logout local nếu API fail
+      await AsyncStorage.removeItem('authToken');
+      if (clearUser) {
+        await clearUser();
+      }
+      setShowLogoutConfirm(false);
+      if (onLogout) {
+        onLogout();
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -82,10 +120,7 @@ const ProfileScreen = ({
             <View style={styles.confirmRow}>
               <TouchableOpacity
                 style={styles.confirmBtn}
-                onPress={() => {
-                  setShowLogoutConfirm(false);
-                  onLogout && onLogout();
-                }}>
+                onPress={handleLogout}>
                 <Text style={styles.confirmBtnText}>Đăng xuất</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.cancelBtn} onPress={() => setShowLogoutConfirm(false)}>
