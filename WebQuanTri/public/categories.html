@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý danh mục</title>
+</head>
+<body>
+  <h2>Quản lý danh mục</h2>
+  <form id="catForm">
+    <input id="key" placeholder="Key (ví dụ: hot)" required>
+    <input id="label" placeholder="Tên hiển thị (ví dụ: Nổi bật)" required>
+    <button type="submit">Lưu</button>
+    <button type="button" onclick="resetForm()">Hủy</button>
+    <input type="hidden" id="catId">
+  </form>
+  <table border="1">
+    <thead>
+      <tr><th>Key</th><th>Tên</th><th>Hành động</th></tr>
+    </thead>
+    <tbody id="catBody"></tbody>
+  </table>
+  <script>
+    const API = '/api/categories';
+    let editId = null;
+
+    async function fetchCats() {
+      const res = await fetch(API);
+      const cats = await res.json();
+      const body = document.getElementById('catBody');
+      body.innerHTML = '';
+      cats.forEach(c => {
+        body.innerHTML += `
+          <tr>
+            <td>${c.key}</td>
+            <td>${c.label}</td>
+            <td>
+              <button onclick='editCat(${JSON.stringify(c)})'>Sửa</button>
+              <button onclick='deleteCat("${c._id}")'>Xóa</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    document.getElementById('catForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const key = document.getElementById('key').value;
+      const label = document.getElementById('label').value;
+      const id = document.getElementById('catId').value;
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `${API}/${id}` : API;
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, label })
+      });
+      resetForm();
+      fetchCats();
+    };
+
+    function editCat(cat) {
+      document.getElementById('key').value = cat.key;
+      document.getElementById('label').value = cat.label;
+      document.getElementById('catId').value = cat._id;
+    }
+
+    async function deleteCat(id) {
+      if (confirm('Xóa danh mục này?')) {
+        await fetch(`${API}/${id}`, { method: 'DELETE' });
+        fetchCats();
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('key').value = '';
+      document.getElementById('label').value = '';
+      document.getElementById('catId').value = '';
+    }
+
+    fetchCats();
+  </script>
+</body>
+</html>

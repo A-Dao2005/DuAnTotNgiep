@@ -37,12 +37,14 @@
 <div class="sidebar">
   <h3>Admin Panel</h3>
   <a href="products.html" class="active">📦 Quản lý sản phẩm</a>
+  <a href="categories.html">🔍 Quản lý danh mục</a>
   <a href="orders.html">📋 Đơn hàng</a>
   <a href="users.html" class="active">👤 Khách hàng</a>
   <a href="chat.html">💬 Chat khách hàng</a>
   <a href="statistics.html">📊 Thống kê</a>
   <a href="history.html">📁 Lịch sử đơn hàng</a>
   <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+ 
 </div>
 
 <h2>📦 Quản lý sản phẩm</h2>
@@ -55,6 +57,11 @@
       <th>Mã SP</th>
       <th>Tên</th>
       <th>Giá</th>
+      <th>Giá cũ</th>
+      <th>Đã bán</th>
+      <th>% Sale</th>
+      <th>Yêu thích</th>
+      <th>Shop</th>
       <th>Phân loại</th>
       <th>Hành động</th>
     </tr>
@@ -66,10 +73,16 @@
   <div class="modal-content">
     <h3 id="modal-title">Thêm sản phẩm</h3>
     <input id="image" placeholder="Link ảnh">
+    <input id="img" placeholder="Link ảnh (img, tuỳ chọn)">
     <input id="maSP" placeholder="Mã SP">
     <input id="tenSanPham" placeholder="Tên sản phẩm">
     <input id="giaSanPham" placeholder="Giá">
-    <input id="phanLoai" placeholder="Phân loại">
+    <input id="priceOld" placeholder="Giá cũ">
+    <input id="sold" placeholder="Đã bán" type="number">
+    <input id="isSale" placeholder="% giảm giá" type="number">
+    <input id="isFavorite" placeholder="Yêu thích? true/false">
+    <input id="shop" placeholder="Tên shop">
+    <select id="phanLoai"></select>
     <button onclick="saveProduct()">Lưu</button>
     <button onclick="closeModal()">Hủy</button>
   </div>
@@ -84,9 +97,24 @@
 </div>
 
 <script>
-  const API_URL = 'http://localhost:5000/api/products';
+  const API_URL = 'http://192.168.2.4:5000/api/products';
   let editId = null;
   let deleteId = null;
+
+  // Fetch danh mục động và render select
+  async function loadCategories(selectedValue = '') {
+    const res = await fetch('/api/categories');
+    const cats = await res.json();
+    const select = document.getElementById('phanLoai');
+    select.innerHTML = '';
+    cats.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.key;
+      opt.textContent = cat.label;
+      if (cat.key === selectedValue) opt.selected = true;
+      select.appendChild(opt);
+    });
+  }
 
   function openModal(product = null) {
     document.getElementById('modal').style.display = 'flex';
@@ -94,10 +122,17 @@
     editId = product?._id || null;
 
     document.getElementById('image').value = product?.image || '';
+    document.getElementById('img').value = product?.img || '';
     document.getElementById('maSP').value = product?.maSP || '';
     document.getElementById('tenSanPham').value = product?.tenSanPham || '';
     document.getElementById('giaSanPham').value = product?.giaSanPham || '';
-    document.getElementById('phanLoai').value = product?.phanLoai || '';
+    document.getElementById('priceOld').value = product?.priceOld || '';
+    document.getElementById('sold').value = product?.sold || '';
+    document.getElementById('isSale').value = product?.isSale || '';
+    document.getElementById('isFavorite').value = product?.isFavorite || '';
+    document.getElementById('shop').value = product?.shop || '';
+    // Gọi loadCategories và set value đúng khi sửa
+    loadCategories(product?.phanLoai || '');
   }
 
   function closeModal() {
@@ -131,10 +166,15 @@
     data.forEach(p => {
       tbody.innerHTML += `
         <tr data-id="${p._id}">
-          <td><img src="${p.image}" alt="Ảnh"></td>
+          <td><img src="${p.image || p.img}" alt="Ảnh" width="60"></td>
           <td>${p.maSP}</td>
           <td>${p.tenSanPham}</td>
           <td>${p.giaSanPham}₫</td>
+          <td>${p.priceOld || ''}</td>
+          <td>${p.sold || 0}</td>
+          <td>${p.isSale || 0}</td>
+          <td>${p.isFavorite ? '✔️' : ''}</td>
+          <td>${p.shop || ''}</td>
           <td>${p.phanLoai}</td>
           <td>
             <button onclick='editProduct(${JSON.stringify(p)})'>Sửa</button>
@@ -151,9 +191,15 @@
 
   async function saveProduct() {
     const image = document.getElementById('image').value;
+    const img = document.getElementById('img').value;
     const maSP = document.getElementById('maSP').value;
     const tenSanPham = document.getElementById('tenSanPham').value;
     const giaSanPham = document.getElementById('giaSanPham').value;
+    const priceOld = document.getElementById('priceOld').value;
+    const sold = Number(document.getElementById('sold').value) || 0;
+    const isSale = Number(document.getElementById('isSale').value) || 0;
+    const isFavorite = document.getElementById('isFavorite').value === 'true';
+    const shop = document.getElementById('shop').value;
     const phanLoai = document.getElementById('phanLoai').value;
 
     const method = editId ? 'PUT' : 'POST';
@@ -162,7 +208,7 @@
     await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image, maSP, tenSanPham, giaSanPham, phanLoai })
+      body: JSON.stringify({ image, img, maSP, tenSanPham, giaSanPham, priceOld, sold, isSale, isFavorite, shop, phanLoai })
     });
 
     alert(editId ? 'Cập nhật thành công!' : 'Thêm thành công!');
@@ -170,7 +216,11 @@
     fetchProducts();
   }
 
-  fetchProducts();
+  // Khi trang load, fetch danh mục và sản phẩm
+  window.onload = function() {
+    loadCategories();
+    fetchProducts();
+  };
 </script>
 </body>
 </html>
