@@ -23,6 +23,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  avatar: {
+    type: String,
+    default: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg'
+  },
+  currentSessionToken: {
+    type: String,
+    default: null
+  },
+  lastLoginAt: {
+    type: Date,
+    default: null
+  },
   ngayDangKy: {
     type: Date,
     default: Date.now
