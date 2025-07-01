@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
     try {
-      const response = await fetch('http://192.168.2.4:5000/api/users/login', {
+      const response = await fetch('http://192.168.1.10:5000/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: username, matKhau: password }),
@@ -29,6 +29,7 @@ const LoginScreen = ({ navigation }) => {
         // Map đúng trường dữ liệu từ API vào context
         setUser({
           _id: data.user._id || data.user.id,
+          id: data.user._id || data.user.id,
           name: data.user.hoTen || data.user.name,
           email: data.user.email,
           phone: data.user.soDienThoai,

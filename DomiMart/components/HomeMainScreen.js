@@ -98,7 +98,7 @@ function HomeMainScreen(props) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://192.168.2.4:5000/api/categories');
+        const res = await fetch('http://192.168.1.10:5000/api/categories');
         const data = await res.json();
         setCategories(data);
         // Nếu chưa có selectedCategory, chọn danh mục đầu tiên
@@ -114,7 +114,7 @@ function HomeMainScreen(props) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://192.168.2.4:5000/api/products'); // Đổi thành IP LAN nếu chạy trên thiết bị thật
+        const response = await fetch('http://192.168.1.10:5000/api/products'); // Đổi thành IP LAN nếu chạy trên thiết bị thật
         const data = await response.json();
         setAllProducts(
           data.map(item => ({
