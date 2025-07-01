@@ -3,30 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <title>Quản lý sản phẩm</title>
-  <link rel="stylesheet" href="products.css">
   <style>
+    body {
+      font-family: Arial, sans-serif; background: #f4f6fb; margin: 0;
+    }
+    .sidebar {
+      width: 220px; height: 100vh; position: fixed; left: 0; top: 0;
+      background: #1a2235; color: #fff; display: flex; flex-direction: column; padding-top: 20px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+    .sidebar h3 {
+      text-align: center; margin-bottom: 20px; font-size: 20px; color: #FFD700;
+    }
+    .sidebar a {
+      color: #fff; padding: 12px 20px; text-decoration: none; display: block;
+      transition: background 0.3s; font-size: 16px;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background: #1976D2;
+    }
+    .main {
+      margin-left: 220px; padding: 30px;
+    }
+    h2 {
+      color: #1976D2; font-size: 24px; margin-bottom: 20px;
+    }
+    button {
+      background: #1976D2; color: white; border: none; padding: 8px 16px; border-radius: 4px;
+      cursor: pointer; margin-bottom: 20px; font-size: 14px;
+    }
+    button:hover { background: #0f5cb5; }
+    table {
+      width: 100%; border-collapse: collapse; background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden;
+    }
+    th, td {
+      padding: 12px; border-bottom: 1px solid #eee; text-align: center;
+    }
+    th {
+      background: #1976D2; color: #fff;
+    }
+    tr:hover { background: #f0f8ff; }
+    img {
+      width: 60px; height: 60px; object-fit: cover;
+    }
     #modal, #modal-delete {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;
     }
     .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      width: 400px;
+      background: #fff; padding: 20px; border-radius: 8px; width: 350px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     .modal-content input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px;
     }
     .modal-content button {
       margin-right: 10px;
@@ -35,32 +65,27 @@
 </head>
 <body>
 <div class="sidebar">
-  <h3>Admin Panel</h3>
+  <h3>DomiMart Admin</h3>
   <a href="products.html" class="active">📦 Quản lý sản phẩm</a>
   <a href="orders.html">📋 Đơn hàng</a>
-  <a href="users.html" class="active">👤 Khách hàng</a>
+  <a href="users.html">👤 Khách hàng</a>
   <a href="chat.html">💬 Chat khách hàng</a>
   <a href="statistics.html">📊 Thống kê</a>
   <a href="history.html">📁 Lịch sử đơn hàng</a>
   <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+  <a href="feedback.html">🗨️ Phản hồi</a>
 </div>
 
-<h2>📦 Quản lý sản phẩm</h2>
-<button onclick="openModal()">+ Thêm sản phẩm</button>
-
-<table>
-  <thead>
-    <tr>
-      <th>Ảnh</th>
-      <th>Mã SP</th>
-      <th>Tên</th>
-      <th>Giá</th>
-      <th>Phân loại</th>
-      <th>Hành động</th>
-    </tr>
-  </thead>
-  <tbody id="product-body"></tbody>
-</table>
+<div class="main">
+  <h2>📦 Quản lý sản phẩm</h2>
+  <button onclick="openModal()">+ Thêm sản phẩm</button>
+  <table>
+    <thead>
+      <tr><th>Ảnh</th><th>Mã SP</th><th>Tên</th><th>Giá</th><th>Phân loại</th><th>Hành động</th></tr>
+    </thead>
+    <tbody id="product-body"></tbody>
+  </table>
+</div>
 
 <div id="modal">
   <div class="modal-content">
@@ -85,91 +110,68 @@
 
 <script>
   const API_URL = 'http://localhost:5000/api/products';
-  let editId = null;
-  let deleteId = null;
-
+  let editId = null, deleteId = null;
   function openModal(product = null) {
     document.getElementById('modal').style.display = 'flex';
     document.getElementById('modal-title').innerText = product ? 'Sửa sản phẩm' : 'Thêm sản phẩm';
     editId = product?._id || null;
-
     document.getElementById('image').value = product?.image || '';
     document.getElementById('maSP').value = product?.maSP || '';
     document.getElementById('tenSanPham').value = product?.tenSanPham || '';
     document.getElementById('giaSanPham').value = product?.giaSanPham || '';
     document.getElementById('phanLoai').value = product?.phanLoai || '';
   }
-
   function closeModal() {
-    document.getElementById('modal').style.display = 'none';
-    editId = null;
+    document.getElementById('modal').style.display = 'none'; editId = null;
   }
-
   function openDeleteModal(id) {
     deleteId = id;
     document.getElementById('modal-delete').style.display = 'flex';
   }
-
   function closeDeleteModal() {
     deleteId = null;
     document.getElementById('modal-delete').style.display = 'none';
   }
-
   async function confirmDelete() {
     await fetch(`${API_URL}/${deleteId}`, { method: 'DELETE' });
-    alert('Xoá thành công');
-    closeDeleteModal();
-    fetchProducts();
+    alert('Xoá thành công'); closeDeleteModal(); fetchProducts();
   }
-
   async function fetchProducts() {
     const res = await fetch(API_URL);
     const data = await res.json();
     const tbody = document.getElementById('product-body');
     tbody.innerHTML = '';
-
     data.forEach(p => {
       tbody.innerHTML += `
-        <tr data-id="${p._id}">
+        <tr>
           <td><img src="${p.image}" alt="Ảnh"></td>
           <td>${p.maSP}</td>
           <td>${p.tenSanPham}</td>
           <td>${p.giaSanPham}₫</td>
           <td>${p.phanLoai}</td>
           <td>
-            <button onclick='editProduct(${JSON.stringify(p)})'>Sửa</button>
+            <button onclick='openModal(${JSON.stringify(p)})'>Sửa</button>
             <button onclick="openDeleteModal('${p._id}')">Xoá</button>
           </td>
         </tr>
       `;
     });
   }
-
-  function editProduct(product) {
-    openModal(product);
-  }
-
   async function saveProduct() {
     const image = document.getElementById('image').value;
     const maSP = document.getElementById('maSP').value;
     const tenSanPham = document.getElementById('tenSanPham').value;
     const giaSanPham = document.getElementById('giaSanPham').value;
     const phanLoai = document.getElementById('phanLoai').value;
-
     const method = editId ? 'PUT' : 'POST';
     const url = editId ? `${API_URL}/${editId}` : API_URL;
-
     await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
+      method, headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image, maSP, tenSanPham, giaSanPham, phanLoai })
     });
-
     alert(editId ? 'Cập nhật thành công!' : 'Thêm thành công!');
-    closeModal();
-    fetchProducts();
+    closeModal(); fetchProducts();
   }
-
   fetchProducts();
 </script>
 </body>

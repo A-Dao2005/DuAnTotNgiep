@@ -4,6 +4,7 @@ const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -16,6 +17,7 @@ mongoose.connect('mongodb+srv://minhnhat19040909:Adao2005@cluster0.qivv2hr.mongo
 // API route
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/feedback', feedbackRoutes);
 // Public folder (HTML + CSS)
 app.use(express.static(path.join(__dirname, 'public')));
 

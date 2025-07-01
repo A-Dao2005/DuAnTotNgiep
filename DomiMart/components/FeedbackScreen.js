@@ -1,22 +1,57 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { UserContext } from '../UserContext';
 
 interface FeedbackScreenProps {
   onBack?: () => void;
 }
 
+const API_URL = 'http://192.168.1.10:5000/api/feedback'; // Đổi thành domain backend của bạn nếu cần
+
 const FeedbackScreen: React.FC<FeedbackScreenProps> = ({ onBack }) => {
+  const { user } = useContext(UserContext);
   const [feedback, setFeedback] = useState('');
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
-    if (!feedback.trim()) return;
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-      setFeedback('');
-      if (onBack) onBack();
-    }, 1500);
+  const handleSend = async () => {
+    setError('');
+    if (!feedback.trim()) {
+      setError('Vui lòng nhập ý kiến phản hồi.');
+      return;
+    }
+    if (!user || !user._id || !user.name) {
+      setError('Không xác định được thông tin người dùng.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user._id,
+          userName: user.name,
+          content: feedback.trim(),
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setSuccess(true);
+        setFeedback('');
+        setTimeout(() => {
+          setSuccess(false);
+          if (onBack) onBack();
+        }, 1500);
+      } else {
+        setError(data.message || 'Gửi phản hồi thất bại.');
+      }
+    } catch (err) {
+      setError('Không thể kết nối máy chủ.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,9 +60,9 @@ const FeedbackScreen: React.FC<FeedbackScreenProps> = ({ onBack }) => {
         <Text style={{ fontSize: 22 }}>{'←'}</Text>
       </TouchableOpacity>
       <View style={styles.headerRow}>
-        <Image source={{ uri: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.avatar} />
+        <Image source={{ uri: user?.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg' }} style={styles.avatar} />
         <View>
-          <Text style={styles.hello}>Xin chào, <Text style={{ color: '#E53935' }}>Nguyen Van A</Text></Text>
+          <Text style={styles.hello}>Xin chào, <Text style={{ color: '#E53935' }}>{user?.name || 'Người dùng'}</Text></Text>
           <Text style={styles.editText}>Chỉnh sửa thông tin cá nhân</Text>
         </View>
       </View>
@@ -40,9 +75,11 @@ const FeedbackScreen: React.FC<FeedbackScreenProps> = ({ onBack }) => {
         placeholder="Nhập ý kiến của bạn..."
         multiline
         numberOfLines={5}
+        editable={!loading}
       />
-      <TouchableOpacity style={styles.btn} onPress={handleSend}>
-        <Text style={styles.btnText}>GỬI</Text>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <TouchableOpacity style={[styles.btn, (loading || !feedback.trim()) && styles.btnDisabled]} onPress={handleSend} disabled={loading || !feedback.trim()}>
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>GỬI</Text>}
       </TouchableOpacity>
       <View style={styles.supportBox}>
         <Text style={styles.sectionTitle}>Hỗ trợ</Text>
@@ -72,6 +109,7 @@ const styles = StyleSheet.create({
   sectionDesc: { color: '#222', fontSize: 13, marginBottom: 10 },
   textArea: { backgroundColor: '#fff', borderRadius: 8, borderWidth: 1, borderColor: '#eee', padding: 10, fontSize: 15, minHeight: 80, textAlignVertical: 'top', marginBottom: 10 },
   btn: { backgroundColor: '#B71C1C', borderRadius: 8, paddingVertical: 14, alignItems: 'center', marginTop: 10 },
+  btnDisabled: { backgroundColor: '#ccc' },
   btnText: { color: '#fff', fontWeight: 'bold', fontSize: 16, textTransform: 'uppercase' },
   supportBox: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginTop: 30 },
   supportBtn: { backgroundColor: '#f5f5f5', borderRadius: 8, padding: 10, marginBottom: 6 },
@@ -79,4 +117,5 @@ const styles = StyleSheet.create({
   toastSuccess: { position: 'absolute', top: '40%', left: 20, right: 20, backgroundColor: '#1B5E20', borderRadius: 12, padding: 18, alignItems: 'center', flexDirection: 'row', zIndex: 100 },
   toastIcon: { fontSize: 28, color: '#fff', marginRight: 10 },
   toastText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  errorText: { color: '#B71C1C', marginBottom: 8, marginTop: -4, fontSize: 13 },
 }); 

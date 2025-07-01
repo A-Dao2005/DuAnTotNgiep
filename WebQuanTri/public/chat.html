@@ -2,48 +2,275 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Chat khách hàng</title>
-  <link rel="stylesheet" href="chat.css" />
+  <title>DomiMart Admin - Chat khách hàng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #2d3748;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      padding: 24px 20px;
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      color: #4a5568;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      margin: 2px 0;
+    }
+
+    .sidebar a:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      border-left-color: #667eea;
+      transform: translateX(5px);
+    }
+
+    .sidebar a.active {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
+      color: #667eea;
+      border-left-color: #667eea;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 280px;
+      padding: 32px;
+    }
+
+    h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 32px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Chat Container */
+    .chat-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+      height: 70vh;
+    }
+
+    .chat-list {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-list h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .chat-list ul {
+      list-style: none;
+    }
+
+    .chat-list li {
+      padding: 16px 20px;
+      margin: 8px 0;
+      background: linear-gradient(135deg, #f7fafc, #edf2f7);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+      font-weight: 500;
+    }
+
+    .chat-list li:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      border-left-color: white;
+    }
+
+    .chat-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 20px 24px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background: #f8fafc;
+    }
+
+    .chat-messages p {
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 12px;
+      max-width: 80%;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .chat-messages p:not(.text-end) {
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e0);
+      color: #2d3748;
+    }
+
+    .chat-messages p.text-end {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 20px 24px;
+      gap: 12px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: #f7fafc;
+    }
+
+    .chat-input input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .chat-input button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .chat-input button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar { width: 240px; }
+      .main { margin-left: 240px; padding: 20px; }
+      .chat-container { grid-template-columns: 300px 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar h3 { font-size: 0; }
+      .sidebar a { justify-content: center; padding: 16px 10px; }
+      .sidebar a span { display: none; }
+      .main { margin-left: 60px; }
+      .chat-container { grid-template-columns: 1fr; grid-template-rows: 200px 1fr; }
+    }
+  </style>
 </head>
 <body>
   
 <div class="sidebar">
-  <h3>Admin Panel</h3>
-  <a href="products.html">📦 Quản lý sản phẩm</a>
-  <a href="orders.html">📋 Đơn hàng</a>
-  <a href="users.html" class="active">👤 Khách hàng</a>
-  <a href="chat.html">💬 Chat khách hàng</a>
-  <a href="statistics.html">📊 Thống kê</a>
-  <a href="history.html">📁 Lịch sử đơn hàng</a>
-  <a href="settings.html">⚙️ Cài đặt tài khoản</a>
+  <h3>DomiMart Admin</h3>
+  <a href="products.html">📦 <span>Quản lý sản phẩm</span></a>
+  <a href="orders.html">📋 <span>Đơn hàng</span></a>
+  <a href="users.html">👤 <span>Khách hàng</span></a>
+  <a href="chat.html" class="active">💬 <span>Chat khách hàng</span></a>
+  <a href="statistics.html">📊 <span>Thống kê</span></a>
+  <a href="history.html">📁 <span>Lịch sử đơn hàng</span></a>
+  <a href="settings.html">⚙️ <span>Cài đặt tài khoản</span></a>
+  <a href="feedback.html">🗨️ <span>Phản hồi</span></a>
 </div>
 
-  <div class="main">
-    <h2>💬 Chat khách hàng</h2>
-    
-    <div class="chat-container">
-      <div class="chat-list">
-        <h4>Danh sách chat</h4>
-        <ul>
-          <li>Nguyễn Văn A</li>
-          <li>Trần Thị B</li>
-        </ul>
+<div class="main">
+  <h2>💬 Chat khách hàng</h2>
+  
+  <div class="chat-container">
+    <div class="chat-list">
+      <h4>Danh sách chat</h4>
+      <ul>
+        <li>Nguyễn Văn A</li>
+        <li>Trần Thị B</li>
+      </ul>
+    </div>
+  
+    <div class="chat-box">
+      <div class="chat-header">Nguyễn Văn A</div>
+      <div class="chat-messages">
+        <p><strong>Khách:</strong> Đơn hàng của em gửi chưa ạ?</p>
+        <p class="text-end"><strong>Admin:</strong> Dạ, bên em gửi hôm qua nhé.</p>
       </div>
-    
-      <div class="chat-box">
-        <div class="chat-header">Nguyễn Văn A</div>
-        <div class="chat-messages">
-          <p><strong>Khách:</strong> Đơn hàng của em gửi chưa ạ?</p>
-          <p class="text-end"><strong>Admin:</strong> Dạ, bên em gửi hôm qua nhé.</p>
-        </div>
-        <div class="chat-input">
-          <input type="text" placeholder="Nhập tin nhắn..." />
-          <button>Gửi</button>
-        </div>
+      <div class="chat-input">
+        <input type="text" placeholder="Nhập tin nhắn..." />
+        <button>Gửi</button>
       </div>
     </div>
-    
-        
   </div>
+</div>
+
 </body>
 </html>

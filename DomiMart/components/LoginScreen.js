@@ -28,10 +28,10 @@ const LoginScreen = ({ navigation }) => {
         
         // Map đúng trường dữ liệu từ API vào context
         setUser({
-          name: data.user.hoTen,
+          _id: data.user._id || data.user.id,
+          name: data.user.hoTen || data.user.name,
           email: data.user.email,
           phone: data.user.soDienThoai,
-          id: data.user._id || data.user.id,
           address: data.user.diaChi || '',
           avatar: data.user.avatar || 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg',
           token: data.token
