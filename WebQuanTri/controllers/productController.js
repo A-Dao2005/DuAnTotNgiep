@@ -22,3 +22,13 @@ exports.deleteProduct = async (req, res) => {
   await Product.findByIdAndDelete(id);
   res.json({ success: true });
 };
+
+exports.searchProducts = async (req, res) => {
+  const { query } = req.query;
+  if (!query) return res.json([]);
+  // Tìm kiếm không phân biệt hoa thường theo tên sản phẩm
+  const products = await Product.find({
+    tenSanPham: { $regex: query, $options: 'i' }
+  });
+  res.json(products);
+};

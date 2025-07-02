@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { productsByCategory } from './HomeMainScreen';
 
-const ProductDetailScreen = ({ product, onAddToCart, onCheckout, onBack, onProductPress }) => {
+const ProductDetailScreen = ({ product, onAddToCart, onCheckout, onBack, onProductPress, relatedProducts = [], categories = [] }) => {
   const [showAdded, setShowAdded] = useState(false);
 
-  const otherProducts = Object.values(productsByCategory)
-    .flat()
-    .filter((p) => p.name !== product.name);
+  // Nếu product không hợp lệ, trả về thông báo
+  if (!product || typeof product !== 'object') {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Không tìm thấy sản phẩm!</Text>
+        <TouchableOpacity onPress={onBack} style={{ marginTop: 20 }}>
+          <Text style={{ color: '#E53935', fontWeight: 'bold' }}>Quay lại</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // Tạm thời ẩn phần sản phẩm khác nếu không có dữ liệu
+  const otherProducts = [];
+
+  // Lấy label danh mục từ categories
+  const categoryLabel = categories.find(cat => cat.key === product.phanLoai)?.label || product.phanLoai;
 
   const handleAddToCart = () => {
     onAddToCart(product);
@@ -34,38 +47,67 @@ const ProductDetailScreen = ({ product, onAddToCart, onCheckout, onBack, onProdu
         <View style={styles.divider} />
         <View style={styles.descBox}>
           <Text style={styles.descTitle}>Chi tiết sản phẩm</Text>
-          <Text style={styles.productDesc}>{product.description}</Text>
+          <Text style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Tên sản phẩm: </Text>
+            {product.name}
+          </Text>
+          <Text style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Giá hiện tại: </Text>
+            {product.price}
+          </Text>
+          {product.priceOld ? (
+            <Text style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Giá cũ: </Text>
+              {product.priceOld}
+            </Text>
+          ) : null}
+          <Text style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Đã bán: </Text>
+            {product.sold || 0}
+          </Text>
+          {product.isSale ? (
+            <Text style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Giảm giá: </Text>
+              {product.isSale}%
+            </Text>
+          ) : null}
+          {product.isFavorite ? (
+            <Text style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Yêu thích: </Text>
+              Có
+            </Text>
+          ) : null}
+          <Text style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Danh mục: </Text>
+            {categoryLabel}
+          </Text>
+          <Text style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Shop: </Text>
+            {product.shop}
+          </Text>
+          {product.description ? (
+            <Text style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Mô tả: </Text>
+              {product.description}
+            </Text>
+          ) : null}
         </View>
         <View style={styles.divider} />
-        <View style={styles.otherBox}>
-          <Text style={styles.otherTitle}>Sản phẩm khác</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.otherRow}>
-            {otherProducts.map((prod, idx) => (
-              <TouchableOpacity key={idx} style={styles.otherCard} onPress={() => onProductPress && onProductPress(prod)}>
-                {prod.isSale && (
-                  <View style={styles.saleTag}>
-                    <Text style={styles.saleTagText}>-{prod.isSale}%</Text>
-                  </View>
-                )}
-                {prod.isFavorite && (
-                  <View style={styles.favoriteTag}>
-                    <Text style={styles.favoriteTagText}>Yêu thích</Text>
-                  </View>
-                )}
-                <Image source={{ uri: prod.img }} style={styles.otherImg} />
-                <Text style={styles.otherName} numberOfLines={2}>{prod.name}</Text>
-                <View style={styles.priceRow}>
-                  <Text style={styles.otherPrice}>{prod.price}</Text>
-                  {prod.priceOld && (
-                    <Text style={styles.oldPrice}>{prod.priceOld}</Text>
-                  )}
-                </View>
-                <Text style={styles.soldText}>Đã bán {prod.sold >= 1000 ? (prod.sold/1000).toFixed(1) + 'k' : prod.sold}</Text>
-                <Text style={styles.shopText}>{prod.shop}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+        {/* Các mặt hàng liên quan */}
+        {relatedProducts.length > 0 && (
+          <View style={styles.relatedBox}>
+            <Text style={styles.relatedTitle}>Các mặt hàng liên quan</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.relatedRow}>
+              {relatedProducts.map((prod, idx) => (
+                <TouchableOpacity key={prod.id || idx} style={styles.relatedCard} onPress={() => onProductPress && onProductPress(prod)}>
+                  <Image source={{ uri: prod.img }} style={styles.relatedImg} />
+                  <Text style={styles.relatedName} numberOfLines={2}>{prod.name}</Text>
+                  <Text style={styles.relatedPrice}>{prod.price}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
       </ScrollView>
 
       <View style={styles.bottomBar}>
@@ -102,7 +144,8 @@ const styles = StyleSheet.create({
   divider: { height: 8, backgroundColor: '#f5f5f5', width: '100%' },
   descBox: { backgroundColor: '#fff', padding: 16 },
   descTitle: { fontWeight: 'bold', fontSize: 16, marginBottom: 6, color: '#222' },
-  productDesc: { color: '#444', fontSize: 15, textAlign: 'left' },
+  detailRow: { fontSize: 15, color: '#444', marginBottom: 4 },
+  detailLabel: { fontWeight: 'bold', color: '#222' },
   bottomBar: {
     flexDirection: 'row',
     position: 'absolute',
@@ -209,4 +252,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
+  relatedBox: { backgroundColor: '#fff', padding: 12, marginTop: 8 },
+  relatedTitle: { fontWeight: 'bold', fontSize: 16, marginBottom: 8, color: '#222' },
+  relatedRow: { flexDirection: 'row', paddingHorizontal: 8 },
+  relatedCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 8,
+    alignItems: 'center',
+    width: 120,
+    elevation: 2,
+    marginRight: 8,
+    marginLeft: 0,
+    position: 'relative',
+  },
+  relatedImg: { width: 60, height: 60, borderRadius: 8, marginBottom: 5, resizeMode: 'cover' },
+  relatedName: { fontWeight: 'bold', fontSize: 13, color: '#222', textAlign: 'center' },
+  relatedPrice: { color: '#E53935', fontSize: 13, fontWeight: 'bold', textAlign: 'center' },
 });
