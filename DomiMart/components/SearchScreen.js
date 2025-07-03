@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
-
-const allProducts = [
-  { name: 'Bộ dao kéo cao cấp', price: '225,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-1.jpg' },
-  { name: 'Bộ dụng cụ 5 món', price: '180,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-5-mon-fk-01-1.jpg' },
-  { name: 'Bộ dao kéo Nhật', price: '320,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-dao-keo-6-mon-fk-01-2.jpg' },
-  { name: 'Dao thái đa năng', price: '120,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/dao-thai-da-nang.jpg' },
-  { name: 'Chảo chống dính', price: '250,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/chao-chong-dinh.jpg' },
-  { name: 'Bộ nồi chảo bếp', price: '500,000 VND', img: 'https://cdn.tgdd.vn/Products/Images/8138/303646/bo-noi-chao-bep.jpg' },
-];
 
 const SearchScreen = ({ onBack, onProductPress }) => {
   const [query, setQuery] = useState('');
-  const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (query.trim() === '') {
+      setResults([]);
+      return;
+    }
+    setLoading(true);
+    const timeout = setTimeout(async () => {
+      try {
+        const response = await fetch(`http://192.168.2.4:5000/api/products/search?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        setResults(
+          data.map(item => ({
+            id: item._id,
+            name: item.tenSanPham,
+            price: item.giaSanPham,
+            img: item.img || item.image,
+          }))
+        );
+      } catch (error) {
+        console.error('Lỗi tìm kiếm sản phẩm:', error);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 300); // debounce 300ms
+    return () => clearTimeout(timeout);
+  }, [query]);
 
   return (
     <View style={styles.container}>
@@ -28,9 +48,10 @@ const SearchScreen = ({ onBack, onProductPress }) => {
           autoFocus
         />
       </View>
+      {loading && <Text style={{ textAlign: 'center', color: '#888' }}>Đang tìm kiếm...</Text>}
       <FlatList
-        data={filtered}
-        keyExtractor={item => item.name}
+        data={results}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.itemBox} onPress={() => onProductPress && onProductPress(item)}>
             <Image source={{ uri: item.img }} style={styles.itemImg} />
@@ -40,7 +61,7 @@ const SearchScreen = ({ onBack, onProductPress }) => {
             </View>
           </TouchableOpacity>
         )}
-        ListEmptyComponent={<Text style={styles.noResult}>Không tìm thấy sản phẩm phù hợp</Text>}
+        ListEmptyComponent={!loading && query.trim() !== '' ? <Text style={styles.noResult}>Không tìm thấy sản phẩm phù hợp</Text> : null}
       />
     </View>
   );
