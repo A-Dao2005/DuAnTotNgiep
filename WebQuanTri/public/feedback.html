@@ -97,7 +97,7 @@
     async function fetchFeedback() {
       const body = document.getElementById('feedbackBody');
       try {
-        const res = await fetch('http://192.168.1.10:5000/api/feedback');
+        const res = await fetch('http://10.10.113.99:5000/api/feedback');
         const data = await res.json();
         if (!Array.isArray(data) || data.length === 0) {
           body.innerHTML = '<tr><td colspan="5">Chưa có phản hồi nào.</td></tr>';
