@@ -30,7 +30,7 @@ const ProfileScreen = ({
       
       // Gọi API logout để blacklist token
       if (token) {
-        await fetch('http://192.168.1.10:5000/api/users/logout', {
+        await fetch('http://192.168.2.4:5000/api/users/logout', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`

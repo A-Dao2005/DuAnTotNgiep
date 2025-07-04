@@ -5,6 +5,17 @@ import Swiper from 'react-native-swiper';
 
 const userName = 'Nguyen Van A';
 
+const categories = [
+  { key: 'hot', label: 'Nổi bật' },
+  { key: 'knife', label: 'Dao kéo' },
+  { key: 'pan', label: 'Chảo bếp' },
+  { key: 'pot', label: 'Nồi nấu' },
+  { key: 'utensil', label: 'Dụng cụ' },
+  { key: 'storage', label: 'Lưu trữ' },
+  { key: 'small', label: 'Đồ nhỏ' },
+  { key: 'bake', label: 'Làm bánh' },
+];
+
 const productsByCategory = {
   hot: [
     { id: '1', name: 'Bộ dao kéo cao cấp', price: '225,000 VND', priceOld: '300,000 VND', img: 'https://sunhouse.com.vn/pic/thumb/large/product/0(112).jpg', sold: 1200, isSale: 25, isFavorite: true, shop: 'DomiMart' },
@@ -89,32 +100,17 @@ function HomeMainScreen(props) {
     onSeeMore,
   } = props;
 
-  // State lưu danh mục động từ backend
-  const [categories, setCategories] = useState([]);
+  // State lưu danh mục đang chọn
   const [selectedCategory, setSelectedCategory] = useState('hot');
-  const [allProducts, setAllProducts] = useState([]);
 
-  // Fetch danh mục từ backend khi load trang
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch('http://192.168.1.10:5000/api/categories');
-        const data = await res.json();
-        setCategories(data);
-        // Nếu chưa có selectedCategory, chọn danh mục đầu tiên
-        if (data.length > 0 && !selectedCategory) setSelectedCategory(data[0].key);
-      } catch (error) {
-        console.error('Lỗi lấy danh mục:', error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // State lưu sản phẩm động từ backend
+  const [allProducts, setAllProducts] = useState([]);
 
   // Fetch sản phẩm từ backend khi load trang
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://192.168.1.10:5000/api/products'); // Đổi thành IP LAN nếu chạy trên thiết bị thật
+        const response = await fetch('http://192.168.2.4:5000/api/Products'); // Đổi thành IP LAN nếu chạy trên thiết bị thật
         const data = await response.json();
         setAllProducts(
           data.map(item => ({
@@ -136,21 +132,6 @@ function HomeMainScreen(props) {
     };
     fetchProducts();
   }, []);
-
-  // Hàm lấy ngẫu nhiên n phần tử từ mảng
-  function getRandomItems(arr, n) {
-    if (!arr || arr.length === 0) return [];
-    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, n);
-  }
-
-  // Lấy 4 sản phẩm ngẫu nhiên cho phần "Mọi người đều thích!"
-  const favoriteProducts = getRandomItems(allProducts, 15);
-
-  // Lọc sản phẩm theo danh mục đang chọn
-  const filteredProducts = allProducts.filter(
-    (item) => item.phanLoai === selectedCategory
-  );
 
   // Render 1 sản phẩm cho phần "Mọi người đều thích!"
   const renderProductItem = ({ item }) => (
@@ -240,13 +221,13 @@ function HomeMainScreen(props) {
       <View style={styles.sectionRow}>
         <Text style={styles.sectionTitle}>Mọi người đều thích!</Text>
         {/* Nút xem thêm sản phẩm nổi bật */}
-        <TouchableOpacity onPress={() => onSeeMore && onSeeMore(allProducts)}>
+        <TouchableOpacity onPress={() => onSeeMore && onSeeMore(productsByCategory.hot)}>
           <Text style={styles.seeMore}>Xem thêm {'>'}</Text>
         </TouchableOpacity>
       </View>
       {/* Danh sách sản phẩm nổi bật cuộn ngang */}
       <FlatList
-        data={favoriteProducts}
+        data={productsByCategory.hot}
         renderItem={renderProductItem}
         keyExtractor={(item) => item.id}
         horizontal
@@ -293,7 +274,7 @@ function HomeMainScreen(props) {
       </View>
       {/* FlatList chính cho sản phẩm theo danh mục */}
       <FlatList
-        data={filteredProducts}
+        data={allProducts}
         renderItem={renderCategoryProductItem}
         keyExtractor={(item) => item.id}
         numColumns={2}
@@ -446,4 +427,5 @@ const styles = StyleSheet.create({
   },
 });
 
+export { productsByCategory };
 export default HomeMainScreen;

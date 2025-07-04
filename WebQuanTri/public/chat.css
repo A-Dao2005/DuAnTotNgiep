@@ -1,34 +1,20 @@
-body {
-  display: flex;
-  min-height: 100vh;
+/* Reset cơ bản */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.sidebar {
-  width: 240px;
-  background-color: #2c3e50;
+/* Main content */
+body {
   padding: 20px;
-  height: 100vh;
-  color: white;
-}
-
-.sidebar a {
-  color: white;
-  display: block;
-  padding: 10px;
-  text-decoration: none;
-  border-radius: 5px;
-}
-
-.sidebar a:hover, .sidebar a.active {
-  background-color: #495057;
+  background-color: #f4f6f8;
+  min-height: 100vh;
 }
 
 .main {
-  flex: 1;
-  padding: 20px;
-  background-color: #f9f9f9;
+  padding: 0;
 }
 
 .chat-container {
@@ -44,13 +30,17 @@ body {
   border-radius: 8px;
   overflow-y: auto;
   max-height: 500px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .chat-list h4 {
   padding: 10px;
   margin: 0;
   border-bottom: 1px solid #eee;
-  background-color: #f0f0f0;
+  background-color: #3498db;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .chat-list ul {
@@ -63,10 +53,13 @@ body {
   padding: 10px;
   cursor: pointer;
   border-bottom: 1px solid #eee;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .chat-list li:hover {
   background-color: #e9ecef;
+  font-weight: 500;
 }
 
 .chat-box {
@@ -77,13 +70,16 @@ body {
   border: 1px solid #ccc;
   border-radius: 8px;
   max-height: 500px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .chat-header {
   padding: 10px;
   border-bottom: 1px solid #eee;
-  background-color: #f0f0f0;
-  font-weight: bold;
+  background-color: #3498db;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .chat-messages {
@@ -91,6 +87,7 @@ body {
   padding: 10px;
   overflow-y: auto;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .chat-input {
@@ -105,6 +102,7 @@ body {
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-weight: 500;
 }
 
 .chat-input button {
@@ -115,8 +113,11 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .chat-input button:hover {
   background-color: #0056b3;
+  font-weight: 600;
 }

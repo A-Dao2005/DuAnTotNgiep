@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Quản lý sản phẩm</title>
   <link rel="stylesheet" href="products.css">
+  <link rel="stylesheet" href="sidebar.css">
   <style>
     #modal, #modal-delete {
       display: none;
@@ -34,70 +35,75 @@
   </style>
 </head>
 <body>
-<div class="sidebar">
-  <h3>Admin Panel</h3>
-  <a href="products.html" class="active">📦 Quản lý sản phẩm</a>
-  <a href="categories.html">🔍 Quản lý danh mục</a>
-  <a href="orders.html">📋 Đơn hàng</a>
-  <a href="users.html" class="active">👤 Khách hàng</a>
-  <a href="chat.html">💬 Chat khách hàng</a>
-  <a href="statistics.html">📊 Thống kê</a>
-  <a href="history.html">📁 Lịch sử đơn hàng</a>
-  <a href="settings.html">⚙️ Cài đặt tài khoản</a>
- 
-</div>
+<div id="sidebar"></div>
+<script>
+  fetch('sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar').innerHTML = html;
+      // Highlight mục đang active
+      const path = location.pathname.split('/').pop();
+      document.querySelectorAll('.sidebar a').forEach(a => {
+        if (a.getAttribute('href') === path) {
+          a.classList.add('active');
+        }
+      });
+    });
+</script>
 
-<h2>📦 Quản lý sản phẩm</h2>
-<button onclick="openModal()">+ Thêm sản phẩm</button>
+<div class="container">
+  <h2>📦 Quản lý sản phẩm</h2>
+  <button onclick="openModal()">+ Thêm sản phẩm</button>
 
-<table>
-  <thead>
-    <tr>
-      <th>Ảnh</th>
-      <th>Mã SP</th>
-      <th>Tên</th>
-      <th>Giá</th>
-      <th>Giá cũ</th>
-      <th>Đã bán</th>
-      <th>% Sale</th>
-      <th>Yêu thích</th>
-      <th>Shop</th>
-      <th>Phân loại</th>
-      <th>Hành động</th>
-    </tr>
-  </thead>
-  <tbody id="product-body"></tbody>
-</table>
+  <table>
+    <thead>
+      <tr>
+        <th>Ảnh</th>
+        <th>Mã SP</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Giá cũ</th>
+        <th>Đã bán</th>
+        <th>% Sale</th>
+        <th>Yêu thích</th>
+        <th>Shop</th>
+        <th>Phân loại</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody id="product-body"></tbody>
+  </table>
 
-<div id="modal">
-  <div class="modal-content">
-    <h3 id="modal-title">Thêm sản phẩm</h3>
-    <input id="image" placeholder="Link ảnh">
-    <input id="img" placeholder="Link ảnh (img, tuỳ chọn)">
-    <input id="maSP" placeholder="Mã SP">
-    <input id="tenSanPham" placeholder="Tên sản phẩm">
-    <input id="giaSanPham" placeholder="Giá">
-    <input id="priceOld" placeholder="Giá cũ">
-    <input id="sold" placeholder="Đã bán" type="number">
-    <input id="isSale" placeholder="% giảm giá" type="number">
-    <input id="isFavorite" placeholder="Yêu thích? true/false">
-    <input id="shop" placeholder="Tên shop">
-    <select id="phanLoai"></select>
-    <button onclick="saveProduct()">Lưu</button>
-    <button onclick="closeModal()">Hủy</button>
+  <div id="modal">
+    <div class="modal-content">
+      <h3 id="modal-title">Thêm sản phẩm</h3>
+      <input id="image" placeholder="Link ảnh">
+      <input id="img" placeholder="Link ảnh (img, tuỳ chọn)">
+      <input id="maSP" placeholder="Mã SP">
+      <input id="tenSanPham" placeholder="Tên sản phẩm">
+      <input id="giaSanPham" placeholder="Giá">
+      <input id="priceOld" placeholder="Giá cũ">
+      <input id="sold" placeholder="Đã bán" type="number">
+      <input id="isSale" placeholder="% giảm giá" type="number">
+      <input id="isFavorite" placeholder="Yêu thích? true/false">
+      <input id="shop" placeholder="Tên shop">
+      <select id="phanLoai"></select>
+      <button onclick="saveProduct()">Lưu</button>
+      <button onclick="closeModal()">Hủy</button>
+    </div>
   </div>
-</div>
 
-<div id="modal-delete">
-  <div class="modal-content">
-    <h3>Bạn có chắc chắn muốn xoá sản phẩm này?</h3>
-    <button onclick="confirmDelete()">Xoá</button>
-    <button onclick="closeDeleteModal()">Hủy</button>
+  <div id="modal-delete">
+    <div class="modal-content">
+      <h3>Bạn có chắc chắn muốn xoá sản phẩm này?</h3>
+      <button onclick="confirmDelete()">Xoá</button>
+      <button onclick="closeDeleteModal()">Hủy</button>
+    </div>
   </div>
 </div>
 
 <script>
-  const API_URL = 'http://192.168.1.10:5000/api/products';
+  const API_URL = 'http://192.168.2.4:5000/api/products';
   let editId = null;
   let deleteId = null;
 

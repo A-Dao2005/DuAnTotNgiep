@@ -21,7 +21,7 @@ const ChangePasswordScreen = ({ onBack, onSuccess }) => {
       return;
     }
     try {
-      const response = await fetch('http://192.168.1.10:5000/api/users/change-password', {
+      const response = await fetch('http://192.168.2.4:5000/api/users/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

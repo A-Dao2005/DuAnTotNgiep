@@ -43,7 +43,7 @@ const EditProfileScreen = (props) => {
   const handleSave = async () => {
     try {
       const token = await AsyncStorage.getItem('authToken');
-      const response = await fetch('http://192.168.1.10:5000/api/users/update-info', {
+      const response = await fetch('http://192.168.2.4:5000/api/users/update-info', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

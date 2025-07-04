@@ -4,19 +4,24 @@
   <meta charset="UTF-8">
   <title>Đơn hàng</title>
   <link rel="stylesheet" href="orders.css" />
+  <link rel="stylesheet" href="sidebar.css" />
 </head>
 <body>
-  <div class="sidebar">
-    <h3>Admin Panel</h3>
-    <a href="products.html">📦 Quản lý sản phẩm</a>
-    <a href="orders.html" class="active">📋 Đơn hàng</a>
-    <a href="users.html" class="active">👤 Khách hàng</a>
-    <a href="chat.html">💬 Chat khách hàng</a>
-    <a href="statistics.html">📊 Thống kê</a>
-    <a href="history.html">📁 Lịch sử đơn hàng</a>
-    <a href="settings.html">⚙️ Cài đặt tài khoản</a>
-    <li><a href="feedback.html">Phản hồi</a></li>
-  </div>
+  <div id="sidebar"></div>
+  <script>
+    fetch('sidebar.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('sidebar').innerHTML = html;
+        // Highlight mục đang active
+        const path = location.pathname.split('/').pop();
+        document.querySelectorAll('.sidebar a').forEach(a => {
+          if (a.getAttribute('href') === path) {
+            a.classList.add('active');
+          }
+        });
+      });
+  </script>
 
   <div class="main">
     <h2>📋 Quản lý đơn hàng</h2>

@@ -1,0 +1,100 @@
+/* Sidebar layout */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f4f6fa;
+}
+
+#sidebar, .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  background: #2c3e50;
+  color: #fff;
+  padding-top: 32px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  z-index: 100;
+}
+
+.sidebar h3 {
+  text-align: center;
+  margin: 0 0 32px 0;
+  font-size: 1.4em;
+  letter-spacing: 1px;
+  height: 48px;
+  line-height: 48px;
+  font-weight: 600;
+  background: transparent;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Cố định font-weight và font-size cho tất cả trạng thái */
+.sidebar a,
+.sidebar a .text,
+.sidebar a .icon,
+.sidebar a:hover,
+.sidebar a:hover .text,
+.sidebar a:hover .icon,
+.sidebar a.active,
+.sidebar a.active .text,
+.sidebar a.active .icon {
+  font-weight: 600 !important;
+  font-size: 1.08em !important;
+  line-height: 1.2 !important;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 12px 28px;
+  color: #ecf0f1;
+  text-decoration: none;
+  border-radius: 6px;
+  margin: 4px 12px;
+  min-height: 44px;
+  transition: background 0.18s, color 0.18s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Đảm bảo không có transform nào */
+  transform: none !important;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #34495e;
+  color: #ffd700;
+  /* Không thay đổi font-weight hoặc font-size */
+  font-weight: 600 !important;
+  font-size: 1.08em !important;
+}
+
+.sidebar a .icon {
+  display: inline-block;
+  width: 32px;
+  text-align: center;
+  margin-right: 10px;
+  font-size: 1.2em;
+  flex-shrink: 0;
+  /* Cố định kích thước icon */
+  font-weight: 600 !important;
+}
+
+.sidebar a .text {
+  flex: 1;
+  min-width: 0;
+  /* Cố định kích thước text */
+  font-weight: 600 !important;
+  font-size: 1.08em !important;
+}
+
+/* Để nội dung trang không bị sidebar che - sửa cho tất cả các class container */
+.main-content, 
+.container,
+.main {
+  margin-left: 260px;
+  padding: 32px 24px;
+}

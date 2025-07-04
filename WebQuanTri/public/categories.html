@@ -3,22 +3,218 @@
 <head>
   <meta charset="UTF-8">
   <title>Quản lý danh mục</title>
+  <link rel="stylesheet" href="sidebar.css">
+  <style>
+    /* Reset cơ bản */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Main content */
+    body {
+      padding: 20px;
+      background-color: #f4f6f8;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 24px;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .add-btn {
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 18px;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #219150;
+      font-weight: 600;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+
+    .form-row input {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .form-row button {
+      padding: 8px 16px;
+      border-radius: 5px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .save-btn {
+      background: #2980d9;
+      color: #fff;
+    }
+
+    .save-btn:hover {
+      background: #1c6690;
+      font-weight: 600;
+    }
+
+    .cancel-btn {
+      background: #eee;
+      color: #222;
+      margin-left: 8px;
+    }
+
+    .cancel-btn:hover {
+      background: #ddd;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    thead tr {
+      background: #3498db;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .action-btn {
+      padding: 6px 14px;
+      border-radius: 5px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 6px;
+      font-size: 14px;
+    }
+
+    .edit-btn {
+      background: #f1c40f;
+      color: #fff;
+    }
+
+    .edit-btn:hover {
+      background: #d68910;
+      font-weight: 600;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      color: #fff;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+      font-weight: 600;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 8px;
+      }
+      th, td {
+        padding: 8px 4px;
+        font-size: 14px;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>Quản lý danh mục</h2>
-  <form id="catForm">
-    <input id="key" placeholder="Key (ví dụ: hot)" required>
-    <input id="label" placeholder="Tên hiển thị (ví dụ: Nổi bật)" required>
-    <button type="submit">Lưu</button>
-    <button type="button" onclick="resetForm()">Hủy</button>
-    <input type="hidden" id="catId">
-  </form>
-  <table border="1">
-    <thead>
-      <tr><th>Key</th><th>Tên</th><th>Hành động</th></tr>
-    </thead>
-    <tbody id="catBody"></tbody>
-  </table>
+   <div id="sidebar"></div>
+  <script>
+    fetch('sidebar.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('sidebar').innerHTML = html;
+        // Highlight mục đang active
+        const path = location.pathname.split('/').pop();
+        document.querySelectorAll('.sidebar a').forEach(a => {
+          if (a.getAttribute('href') === path) {
+            a.classList.add('active');
+          }
+        });
+      });
+  </script>
+  <div class="container">
+    <h2>📦 Quản lý danh mục</h2>
+    <button class="add-btn" onclick="resetForm();document.getElementById('catForm').style.display='flex'">+ Thêm danh mục</button>
+    <form id="catForm" style="display:none; margin-bottom: 18px;" onsubmit="return false;">
+      <div class="form-row">
+        <input id="key" placeholder="Key (ví dụ: hot)" required>
+        <input id="label" placeholder="Tên hiển thị (ví dụ: Nổi bật)" required>
+        <button class="save-btn" onclick="submitCatForm()">Lưu</button>
+        <button class="cancel-btn" type="button" onclick="resetForm();document.getElementById('catForm').style.display='none'">Hủy</button>
+        <input type="hidden" id="catId">
+      </div>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Key</th><th>Tên</th><th>Hành động</th></tr>
+      </thead>
+      <tbody id="catBody"></tbody>
+    </table>
+  </div>
   <script>
     const API = '/api/categories';
     let editId = null;
@@ -34,34 +230,36 @@
             <td>${c.key}</td>
             <td>${c.label}</td>
             <td>
-              <button onclick='editCat(${JSON.stringify(c)})'>Sửa</button>
-              <button onclick='deleteCat("${c._id}")'>Xóa</button>
+              <button class="action-btn edit-btn" onclick='editCat(${JSON.stringify(c)})'>Sửa</button>
+              <button class="action-btn delete-btn" onclick='deleteCat("${c._id}")'>Xóa</button>
             </td>
           </tr>
         `;
       });
     }
 
-    document.getElementById('catForm').onsubmit = async (e) => {
-      e.preventDefault();
+    function submitCatForm() {
       const key = document.getElementById('key').value;
       const label = document.getElementById('label').value;
       const id = document.getElementById('catId').value;
       const method = id ? 'PUT' : 'POST';
       const url = id ? `${API}/${id}` : API;
-      await fetch(url, {
+      fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key, label })
+      }).then(() => {
+        resetForm();
+        document.getElementById('catForm').style.display = 'none';
+        fetchCats();
       });
-      resetForm();
-      fetchCats();
-    };
+    }
 
     function editCat(cat) {
       document.getElementById('key').value = cat.key;
       document.getElementById('label').value = cat.label;
       document.getElementById('catId').value = cat._id;
+      document.getElementById('catForm').style.display = 'flex';
     }
 
     async function deleteCat(id) {

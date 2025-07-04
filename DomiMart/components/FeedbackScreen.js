@@ -6,7 +6,7 @@ interface FeedbackScreenProps {
   onBack?: () => void;
 }
 
-const API_URL = 'http://192.168.1.10:5000/api/feedback'; // Đổi thành domain backend của bạn nếu cần
+const API_URL = 'http://192.168.2.4:5000/api/feedback'; // Đổi thành domain backend của bạn nếu cần
 
 const FeedbackScreen: React.FC<FeedbackScreenProps> = ({ onBack }) => {
   const { user } = useContext(UserContext);
